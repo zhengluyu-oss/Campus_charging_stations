@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ public class AdminServiceImpl implements AdminService {
     private Integer tokenExpired;
     @Autowired
     private AdminMapper adminMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public JsonResult<AdminDTO> findAll() {
@@ -62,10 +65,11 @@ public class AdminServiceImpl implements AdminService {
             if (jsonResult.getState() != 0) {
                 return jsonResult;
             }
-            //insert操作
+            //insert操作 - 密码加密
             LocalDateTime now = LocalDateTime.now();
             admin.setCreateTime(now);
             admin.setUpdateTime(now);
+            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
             adminMapper.insert(admin);
             //模拟一个异常
 //            int i = 0;
@@ -104,7 +108,7 @@ public class AdminServiceImpl implements AdminService {
         //调试信息
         log.debug("existAdmin={}", existAdmin);
         if (existAdmin != null) {
-            log.info("注册中使用存在的用户名为：{},密码为：{}", username, password);
+            log.info("注册中使用存在的用户名为：{}", username);
             return JsonResult.fail("用户名已经存在");
         }
         return JsonResult.success("");
@@ -125,8 +129,8 @@ public class AdminServiceImpl implements AdminService {
         if (StringUtils.length(username) < 3 || StringUtils.length(username) > 10) {
             return JsonResult.fail("用户名的长度是3~10字符");
         }
-        if (StringUtils.length(password) < 3 || StringUtils.length(password) > 20) {
-            return JsonResult.fail("密码的长度是3~20字符");
+        if (StringUtils.length(password) < 6 || StringUtils.length(password) > 30) {
+            return JsonResult.fail("密码的长度是6~30字符");
         }
         return JsonResult.success("");
     }
@@ -138,45 +142,67 @@ public class AdminServiceImpl implements AdminService {
         if (jsonResult.getState() != 0) {
             return jsonResult;
         }
-        //根据用户名和密码查询用户，如果查询结果为null，说明用户名或者密码不正确，否则登录成功
-        Admin admin = adminMapper.selectByUsernameAndPassword(username, password);
+        //根据用户名查询用户
+        Admin admin = adminMapper.selectByUsername(username);
         if (admin == null) {
             return JsonResult.fail("用户名或者密码不正确");
-        } else {
-            //登录成功，生成token 并把token返回给前端
-            Map<String, Object> claims = new HashMap<>();
-            claims.put("id", admin.getId());
-            claims.put("username", admin.getUsername());
-            String token = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
-            //密码设置为null，不能给前端，属于敏感信息
-            admin.setPassword(null);
-            //返回前端的message是token 同时还有admin对象信息（不包括密码）
-            return JsonResult.success(token, admin);
         }
+        //验证密码
+        if (!passwordEncoder.matches(password, admin.getPassword())) {
+            // 兼容明文密码：如果明文匹配，则自动加密迁移
+            if (password.equals(admin.getPassword())) {
+                admin.setPassword(passwordEncoder.encode(password));
+                adminMapper.updateById(admin);
+                log.info("管理员 {} 的密码已自动迁移到 BCrypt 加密", username);
+            } else {
+                return JsonResult.fail("用户名或者密码不正确");
+            }
+        }
+        //登录成功，生成token 并把token返回给前端
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", admin.getId());
+        claims.put("username", admin.getUsername());
+        String token = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
+        //密码设置为null，不能给前端，属于敏感信息
+        admin.setPassword(null);
+        //返回前端的message是token 同时还有admin对象信息（不包括密码）
+        return JsonResult.success(token, admin);
     }
 
     @Override
     public JsonResult login(AdminLoginDTO adminLoginDTO) {
+        String username = adminLoginDTO.getUsername();
+        String password = adminLoginDTO.getPassword();
         //校验数据
-        JsonResult jsonResult = checkUsernameAndPassword(adminLoginDTO.getUsername(), adminLoginDTO.getPassword());
+        JsonResult jsonResult = checkUsernameAndPassword(username, password);
         if (jsonResult.getState() != 0) {
             return jsonResult;
         }
-        //根据用户名和密码查询用户，如果查询结果为null，说明用户名或者密码不正确，否则登录成功
-        Admin admin = adminMapper.selectByUsernameAndPassword(adminLoginDTO.getUsername(), adminLoginDTO.getPassword());
+        //根据用户名查询用户
+        Admin admin = adminMapper.selectByUsername(username);
         if (admin == null) {
             return JsonResult.fail("用户名或者密码不正确");
-        } else {
-            //登录成功，生成token 并把token返回给前端
-            Map<String, Object> claims = new HashMap<>();
-            claims.put("id", admin.getId());
-            claims.put("username", admin.getUsername());
-            String token = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
-            //密码设置为null，不能给前端，属于敏感信息
-            admin.setPassword(null);
-            //返回前端的message是token 同时还有admin对象信息（不包括密码）
-            return JsonResult.success(token, admin);
         }
+        //验证密码
+        if (!passwordEncoder.matches(password, admin.getPassword())) {
+            // 兼容明文密码：如果明文匹配，则自动加密迁移
+            if (password.equals(admin.getPassword())) {
+                admin.setPassword(passwordEncoder.encode(password));
+                adminMapper.updateById(admin);
+                log.info("管理员 {} 的密码已自动迁移到 BCrypt 加密", username);
+            } else {
+                return JsonResult.fail("用户名或者密码不正确");
+            }
+        }
+        //登录成功，生成token 并把token返回给前端
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", admin.getId());
+        claims.put("username", admin.getUsername());
+        String token = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
+        //密码设置为null，不能给前端，属于敏感信息
+        admin.setPassword(null);
+        //返回前端的message是token 同时还有admin对象信息（不包括密码）
+        return JsonResult.success(token, admin);
     }
 
     @Override

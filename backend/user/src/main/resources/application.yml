@@ -5,12 +5,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/campus_charging_station?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    username: root
-    password: 123456
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      password: ${REDIS_PASSWORD:}
+      port: ${REDIS_PORT:6379}
       database: 3
   web:
     resources:
@@ -20,13 +21,13 @@ spring:
         - classpath:/static/
         - classpath:/public/
         #配置读取项目外资源（注意：上传文件的位置要 读取的位置要一致 file.basePath）
-        - file:F:\guochuang\my_project_useful\the_first\fileplaceholder
+        - file:${FILE_UPLOAD_PATH:F:\guochuang\my_project_useful\the_first\fileplaceholder}
   servlet:
     multipart:
       #配置上传文件最大值
-      max-file-size: 1024MB
+      max-file-size: 10MB
       #配置请求数据最大值
-      max-request-size: 2048MB
+      max-request-size: 50MB
 springdoc:
   # 1. 原始 JSON 数据路径 (Apifox 同步时用的就是这个)
   api-docs:
@@ -60,9 +61,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #配置文件上传位置
 file:
-  basePath: F:\guochuang\my_project_useful\the_first\fileplaceholder
+  basePath: ${FILE_BASE_PATH:F:\guochuang\my_project_useful\the_first\fileplaceholder}
 # JWT: secret must be at least 32 characters in production (HS256)
 jwt:
-  secret: campus-charging-station-dev-secret-key-32bytes!
+  secret: ${JWT_SECRET:campus-charging-station-dev-secret-key-32bytes!}
   token:
     expired: 36000000

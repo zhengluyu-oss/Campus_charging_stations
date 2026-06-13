@@ -26,7 +26,13 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
                         "/**/*.css",
                         "/error",
                         "/**/*.html",
-                        "/favicon.ico"
+                        "/favicon.ico",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/webjars/**"
                 );
     }
 }

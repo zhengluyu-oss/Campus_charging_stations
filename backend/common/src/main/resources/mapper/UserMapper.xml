@@ -55,4 +55,25 @@
         </foreach>
     </select>
 
+    <!-- 按用户名模糊查询（分页） -->
+    <select id="selectPageByUsernameLike" resultType="com.tjetc.entity.userAndAdmin.User">
+        SELECT
+            user_id AS id,
+            username,
+            password,
+            avatar_path,
+            email,
+            phone,
+            user_type,
+            created_time,
+            updated_time
+        FROM users
+        <where>
+            <if test="likeUsername != null and likeUsername != ''">
+                AND username LIKE #{likeUsername}
+            </if>
+        </where>
+        ORDER BY user_id DESC
+    </select>
+
 </mapper>

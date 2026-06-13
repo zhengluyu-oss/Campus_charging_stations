@@ -3,6 +3,7 @@ package com.tjetc.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tjetc.common.JsonResult;
 import com.tjetc.common.JwtTokenUtil;
+import com.tjetc.common.UserContext;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,8 +26,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             throws Exception {
 
         // 【核心修改】如果是 OPTIONS 请求，直接放行！
-        // 浏览器在发送跨域请求（如POST, PUT, DELETE）前会先发送一个OPTIONS请求询问服务器是否允许
-        // 这个请求不带token，必须放行，否则前端会报CORS错误
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             return true;
         }
@@ -38,6 +37,10 @@ public class LoginInterceptor implements HandlerInterceptor {
             try {
                 //校验token是否有效并且不过期
                 Claims claims = JwtTokenUtil.parseJwt(token);
+                // 提取用户信息并设置到 UserContext
+                Integer userId = claims.get("id", Integer.class);
+                String username = claims.get("username", String.class);
+                UserContext.set(userId, username);
                 //放行
                 return true;
             } catch (Exception e) {
@@ -54,5 +57,12 @@ public class LoginInterceptor implements HandlerInterceptor {
         response.getWriter().write(jsonStr);
         //不放行
         return false;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+                                Object handler, Exception ex) throws Exception {
+        // 清除 UserContext，防止内存泄漏
+        UserContext.clear();
     }
 }
