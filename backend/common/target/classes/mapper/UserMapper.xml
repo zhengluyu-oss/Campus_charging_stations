@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.UserMapper">
+
+    <!-- 按用户名查询用户（用于用户名查重、登录） -->
+    <select id="selectByUsername" resultType="com.tjetc.entity.userAndAdmin.User">
+        SELECT
+            user_id AS id,
+            username,
+            password,
+            avatar_path,
+            email,
+            phone,
+            user_type,
+            created_time,
+            updated_time
+        FROM users
+        WHERE username = #{username}
+    </select>
+
+    <!-- 按用户名+密码查询用户（用于登录验证） -->
+    <select id="selectByUsernameAndPassword" resultType="com.tjetc.entity.userAndAdmin.User">
+        SELECT
+            user_id AS id,
+            username,
+            password,
+            avatar_path,
+            email,
+            phone,
+            user_type,
+            created_time,
+            updated_time
+        FROM users
+        WHERE username = #{username}
+          AND password = #{password}
+    </select>
+
+    <!-- 按用户ID批量查询（可选，扩展业务） -->
+    <select id="selectBatchByIds" resultType="com.tjetc.entity.userAndAdmin.User">
+        SELECT
+        user_id,
+        username,
+        password,
+        avatar_path,
+        email,
+        phone,
+        user_type,
+        created_time,
+        updated_time
+        FROM users
+        WHERE user_id IN
+        <foreach collection="list" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
+
+</mapper>

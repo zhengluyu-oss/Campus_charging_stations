@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.NewsMapper">
+    <select id="selectPage" resultType="com.tjetc.entity.core.News">
+        select * from news order by publish_date desc
+    </select>
+    
+    <select id="selectByCategory" resultType="com.tjetc.entity.core.News">
+        select * from news where news_category = #{category} order by publish_date desc
+    </select>
+</mapper>

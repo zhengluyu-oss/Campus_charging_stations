@@ -1,0 +1,93 @@
+/*
+* Copyright (c) 2024 Huawei Device Co., Ltd.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+import LazyDataSource from '../util/LazyDataSource';
+
+export class Data {
+  private static instance: Data;
+  lazyDataSource: LazyDataSource<DataSource> = new LazyDataSource();
+  static readonly IMAGES: Resource[] =
+    [
+      $rawfile("wode/realImageGen_common_3.png"),
+      $rawfile("wode/realImageGen_common_3.png"),
+      $rawfile("wode/realImageGen_common_3.png"),
+      $rawfile("wode/realImageGen_common_3.png")];
+  static readonly MAIN_TEXT: string[] = ['客服电话', '用户协议', '隐私政策', '关于我们'];
+  static readonly SUB_TEXT: string[] = ['400-123-4567', '《用户协议》', '《隐私政策》', '《关于我们》'];
+  static readonly DESCRIPTION_TEXT: string[] =
+    ['周一至周日 9:00-18:00', '请仔细阅读并同意相关条款', '我们严格保护您的个人信息', '了解更多品牌服务信息'];
+
+  constructor() {
+  }
+
+  public static getInstance(): Data {
+    if (!Data.instance) {
+      Data.instance =
+        new Data();
+    }
+    return Data.instance;
+  }
+
+  /**
+   * Data loaded on current view converts network data into rendering data
+   */
+  getResources(): Promise<void> {
+    /**
+     * use your web request here
+     */
+    return new Promise((resolve: Function) => {
+      const modelList: Array<DataSource> = [];
+      for (let index = 0; index < Data.IMAGES.length;
+        index++) {
+        modelList.push(new DataSource(
+          Data.IMAGES[index],
+          Data.MAIN_TEXT[index],
+          Data.SUB_TEXT[index],
+          Data.DESCRIPTION_TEXT[index]));
+      }
+      this.lazyDataSource.pushArrayData(modelList);
+      resolve();
+    });
+  }
+}
+
+export class DataSource {
+  private image: Resource;
+  private mainText: string;
+  private subText: string;
+  private descriptionText: string;
+
+  constructor(image: Resource, mainText: string, subText: string, descriptionText: string) {
+    this.image = image;
+    this.mainText = mainText;
+    this.subText = subText;
+    this.descriptionText = descriptionText;
+  }
+
+  getImage(): Resource {
+    return this.image;
+  }
+
+  getMainText(): string {
+    return this.mainText;
+  }
+
+  getSubText(): string {
+    return this.subText;
+  }
+
+  getDescriptionText(): string {
+    return this.descriptionText;
+  }
+}

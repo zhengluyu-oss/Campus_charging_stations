@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.AdminMapper">
+
+    <!-- 按用户名查询管理员（用于登录、用户名查重） -->
+    <select id="selectByUsername" resultType="com.tjetc.entity.userAndAdmin.Admin">
+        SELECT
+            id,
+            username,
+            password,
+            avatar_path,
+            email,
+            telephone,
+            qq,
+            create_time,
+            update_time
+        FROM admin
+        WHERE username = #{username}
+    </select>
+
+    <!-- 按用户名+密码查询管理员（用于登录验证） -->
+    <select id="selectByUsernameAndPassword" resultType="com.tjetc.entity.userAndAdmin.Admin">
+        SELECT
+            id,
+            username,
+            password,
+            avatar_path,
+            email,
+            telephone,
+            qq,
+            create_time,
+            update_time
+        FROM admin
+        WHERE username = #{username}
+          AND password = #{password}
+    </select>
+
+    <!-- 更新管理员信息（排除密码，单独做密码修改接口） -->
+    <update id="updateAdminInfo">
+        UPDATE admin
+        SET avatar_path = #{avatarPath},
+            email = #{email},
+            telephone = #{telephone},
+            qq = #{qq},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- 修改管理员密码 -->
+    <update id="updateAdminPassword">
+        UPDATE admin
+        SET password = #{password},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+</mapper>

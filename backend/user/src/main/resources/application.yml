@@ -1,0 +1,68 @@
+server:
+  port: 8080
+#数据源
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/campus_charging_station?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 3
+  web:
+    resources:
+      static-locations:
+        - classpath:/META-INF/resources/
+        - classpath:/resources/
+        - classpath:/static/
+        - classpath:/public/
+        #配置读取项目外资源（注意：上传文件的位置要 读取的位置要一致 file.basePath）
+        - file:F:\guochuang\my_project_useful\the_first\fileplaceholder
+  servlet:
+    multipart:
+      #配置上传文件最大值
+      max-file-size: 1024MB
+      #配置请求数据最大值
+      max-request-size: 2048MB
+springdoc:
+  # 1. 原始 JSON 数据路径 (Apifox 同步时用的就是这个)
+  api-docs:
+    path: /v3/api-docs
+    enabled: true # 是否开启，生产环境建议设为 false
+
+  # 2. Swagger 网页界面路径 (供开发人员手动查看)
+  swagger-ui:
+    path: /swagger-ui.html
+    # 开启这个后，访问 /swagger-ui.html 会自动跳转到真正的静态资源页面
+    operations-sorter: alpha # 接口按字母顺序排序，方便找接口
+    swagger-ui:
+      # 是否显示请求耗时
+      display-request-duration: true
+      # 默认展开级别 (none, list, full)
+      doc-expansion: list
+      # 是否支持手动输入 JSON 导入接口（通常不用开启）
+      disable-swagger-default-url: true
+
+#mybatisplus
+mybatis-plus:
+  #配置映射文件的位置 类路径下mapper目录下或者子子孙孙目录下，以.xml后缀的配置文件
+#  mapper-locations: classpath*:/mapper/**/*.xml
+  mapper-locations: classpath*:mapper/*.xml
+  #配置类型别名
+  type-aliases-package: com.tjetc.entity
+  #配置typehandler类型处理器
+  type-handlers-package: com.tjetc.handler
+  #控制台输出sql日志
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#配置文件上传位置
+file:
+  basePath: F:\guochuang\my_project_useful\the_first\fileplaceholder
+# JWT: secret must be at least 32 characters in production (HS256)
+jwt:
+  secret: campus-charging-station-dev-secret-key-32bytes!
+  token:
+    expired: 36000000

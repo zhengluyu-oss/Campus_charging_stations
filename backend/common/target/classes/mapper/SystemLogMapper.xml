@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.SystemLogMapper">
+
+    <!-- 按用户ID分页查询系统日志 -->
+    <select id="selectPageByUserId" resultType="com.tjetc.entity.core.SystemLog">
+        SELECT
+            log_id,
+            user_id,
+            action,
+            details,
+            ip_address,
+            created_at
+        FROM system_logs
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 按操作类型分页查询系统日志 -->
+    <select id="selectPageByAction" resultType="com.tjetc.entity.core.SystemLog">
+        SELECT
+            log_id,
+            user_id,
+            action,
+            details,
+            ip_address,
+            created_at
+        FROM system_logs
+        WHERE action = #{action}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 按时间范围查询系统日志 -->
+    <select id="selectByTimeRange" resultType="com.tjetc.entity.core.SystemLog">
+        SELECT
+            log_id,
+            user_id,
+            action,
+            details,
+            ip_address,
+            created_at
+        FROM system_logs
+        WHERE created_at BETWEEN #{startTime} AND #{endTime}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 按IP地址查询系统日志 -->
+    <select id="selectByIpAddress" resultType="com.tjetc.entity.core.SystemLog">
+        SELECT
+            log_id,
+            user_id,
+            action,
+            details,
+            ip_address,
+            created_at
+        FROM system_logs
+        WHERE ip_address = #{ipAddress}
+        ORDER BY created_at DESC
+    </select>
+
+</mapper>

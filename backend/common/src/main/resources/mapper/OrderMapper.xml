@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.tjetc.entity.core.Orders">
+        <id column="order_id" property="orderId" />
+        <result column="user_id" property="userId" />
+        <result column="station_id" property="stationId" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="duration_minutes" property="durationMinutes" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="payment_status" property="paymentStatus" />
+        <result column="created_time" property="createdTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_id, user_id, station_id, start_time, end_time, duration_minutes, total_amount, payment_status, created_time
+    </sql>
+
+    <select id="selectPageByPaymentStatus" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE payment_status = #{paymentStatus}
+        ORDER BY created_time DESC
+    </select>
+
+    <select id="selectPageByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE user_id = #{userId}
+        ORDER BY created_time DESC
+    </select>
+
+    <select id="selectPageByStationId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE station_id = #{stationId}
+        ORDER BY created_time DESC
+    </select>
+
+    <select id="countOrderDataByTimeRange" resultType="java.util.Map">
+        SELECT
+            COUNT(order_id) AS orderCount,
+            IFNULL(SUM(total_amount), 0.00) AS totalAmount
+        FROM orders
+        WHERE created_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE user_id = #{userId}
+        ORDER BY created_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM orders
+        WHERE order_id = #{orderId}
+    </select>
+
+    <update id="updateById">
+        UPDATE orders
+        <set>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+        </set>
+        WHERE order_id = #{orderId}
+    </update>
+
+</mapper>
