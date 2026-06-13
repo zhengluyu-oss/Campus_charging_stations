@@ -13,7 +13,7 @@ const showNav = ref(true)
 const updateShowNav = () => {
   const hiddenRoutes = ['/welcome', '/user-login', '/user-register']
   const isHiddenPath = hiddenRoutes.includes(route.path)
-  
+
   if (route.path === '/user/news') {
     const mode = route.query.mode
     showNav.value = mode === 'publish'
@@ -47,7 +47,8 @@ watch(
 <style scoped>
 .layout {
   min-height: 100vh;
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
 }
 
 .container {

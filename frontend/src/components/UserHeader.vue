@@ -24,11 +24,15 @@ const goToDashboard = () => {
       <el-icon class="back" v-if="state.hasBack" @click="back">
         <Back/>
       </el-icon>
-      <span class="logo" @click="goToDashboard">校园充电站</span>
+      <span class="logo" @click="goToDashboard">
+        <span class="logo-icon">⚡</span>
+        校园充电站
+      </span>
     </div>
     <div class="right">
       <el-dropdown>
         <span class="el-dropdown-link">
+          <span class="user-avatar">👤</span>
           用户中心
           <el-icon class="el-icon--right">
             <arrow-down />
@@ -48,13 +52,18 @@ const goToDashboard = () => {
 
 <style scoped>
 .header {
-  height: 50px;
-  border-bottom: 1px solid #e4e7ed;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  background-color: #fff;
+  padding: 0 24px;
+  background: rgba(15, 32, 39, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header .left {
@@ -63,27 +72,42 @@ const goToDashboard = () => {
 }
 
 .header .left .logo {
-  font-size: 16px;
-  font-weight: 500;
-  margin-left: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-left: 12px;
   cursor: pointer;
-  color: #303133;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.header .left .logo:hover {
+  transform: scale(1.02);
+}
+
+.logo-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 8px rgba(0, 201, 255, 0.6));
 }
 
 .header .left .back {
-  border: 1px solid #dcdfe6;
-  padding: 4px;
-  border-radius: 4px;
-  margin-right: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px;
+  border-radius: 8px;
+  margin-right: 12px;
   cursor: pointer;
-  color: #606266;
-  transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .header .left .back:hover {
-  background-color: #f5f7fa;
-  border-color: #409EFF;
-  color: #409EFF;
+  background: rgba(0, 201, 255, 0.2);
+  border-color: #00c9ff;
+  color: #00c9ff;
+  transform: translateX(-2px);
 }
 
 .header .right {
@@ -93,14 +117,25 @@ const goToDashboard = () => {
 
 .el-dropdown-link {
   cursor: pointer;
-  color: #606266;
+  color: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   font-size: 14px;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .el-dropdown-link:hover {
-  color: #409EFF;
+  color: #00c9ff;
+  background: rgba(0, 201, 255, 0.1);
+  border-color: rgba(0, 201, 255, 0.3);
+}
+
+.user-avatar {
+  margin-right: 8px;
+  font-size: 16px;
 }
 </style>
