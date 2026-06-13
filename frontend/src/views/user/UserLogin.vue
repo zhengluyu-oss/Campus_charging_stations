@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { User, Lock } from '@element-plus/icons-vue';
 import {useUserStore} from "../../stores/user.ts";
-import {userLogin} from "../../apis/user.ts";
+import {userLogin} from "../../api/user.ts";
 
 const userStore = useUserStore()
 const router = useRouter()

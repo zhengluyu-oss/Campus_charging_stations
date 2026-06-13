@@ -152,7 +152,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Lightning, Document, User, SwitchButton, ArrowRight, Timer, Coin, TrendCharts, Calendar, DocumentCopy, Search } from '@element-plus/icons-vue';
 import { useUserStore } from '../../stores/user';
-import { getCurrentUser } from '../../apis/user';
+import { getCurrentUser } from '../../api/user';
 
 const router = useRouter();
 const userStore = useUserStore();

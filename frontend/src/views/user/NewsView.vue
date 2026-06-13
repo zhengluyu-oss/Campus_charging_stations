@@ -307,7 +307,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { Plus, Back } from '@element-plus/icons-vue';
 import type { FormInstance, FormRules, UploadProps } from 'element-plus';
-import { publishNews } from '@/apis/news';
+import { publishNews } from '@/api/news';
 import { useUserStore } from '@/stores/user';
 import DOMPurify from 'dompurify';
 

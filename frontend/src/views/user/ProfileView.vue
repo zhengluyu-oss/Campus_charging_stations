@@ -103,8 +103,8 @@ import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../../stores/user';
-import { getCurrentUser, updateOwnMessage } from '../../apis/user';
-import { uploadAvatar } from '../../apis/upload';
+import { getCurrentUser, updateOwnMessage } from '../../api/user';
+import { uploadAvatar } from '../../api/upload';
 import type { User } from '../../viewmodel/UserModel';
 
 const router = useRouter();

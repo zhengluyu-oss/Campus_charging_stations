@@ -54,7 +54,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { userRegister } from '../../apis/user';
+import { userRegister } from '../../api/user';
 
 const router = useRouter();
 const formRef = ref();
