@@ -223,11 +223,12 @@ const toggleEdit = async () => {
           
           if (avatarFile.value) {
             const uploadResponse = await uploadAvatar(avatarFile.value);
-            if (uploadResponse.data && (uploadResponse.data.code === 200 || uploadResponse.data.state === 0 || uploadResponse.data.status === 'success')) {
-              avatarPath = uploadResponse.data.data || uploadResponse.data.url || uploadResponse.data.path;
+            // request 拦截器已解包响应，uploadResponse 就是 {state, message, data}
+            if (uploadResponse && (uploadResponse.state === 0)) {
+              avatarPath = uploadResponse.data || uploadResponse.url || uploadResponse.path;
               userInfo.avatarPath = avatarPath;
             } else {
-              ElMessage.error(uploadResponse.data?.message || uploadResponse.data?.msg || '头像上传失败');
+              ElMessage.error(uploadResponse?.message || '头像上传失败');
               return;
             }
           }
@@ -245,7 +246,8 @@ const toggleEdit = async () => {
 
           console.log('更新个人信息响应:', response);
 
-          if (response && (response.code === 200 || response.state === 0 || response.status === 'success')) {
+          // request 拦截器已解包响应，response 就是 {state, message, data}
+          if (response && response.state === 0) {
             userStore.saveUser({
               ...userInfo,
               id: userId,
@@ -260,11 +262,10 @@ const toggleEdit = async () => {
           }
         } catch (error: any) {
           console.error('更新用户信息失败:', error);
-          if (error.response?.status === 401 || error.response?.data?.state === -1) {
-            ElMessage.error('登录已过期，请重新登录');
+          // 拦截器已将业务错误转为字符串 reject，登录过期也会 reject
+          // 此处不需要再重复显示错误消息（拦截器已显示）
+          if (typeof error === 'string' && error.includes('登录')) {
             router.push('/user-login');
-          } else {
-            ElMessage.error(error.response?.data?.message || error.message || '更新失败，请稍后重试');
           }
         }
       } else {
