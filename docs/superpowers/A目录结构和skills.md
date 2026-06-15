@@ -1,6 +1,6 @@
 # Superpowers 工作区规范
 
-版本：v1.0
+版本：v2.0
 
 ---
 
@@ -50,16 +50,12 @@ project-root
 内容：
 
 ```text
-overview.md
-architecture.md
-modules.md
-startup-flow.md
-business-flow.md
-api-system.md
-database.md
-cache.md
-infrastructure.md
-deployment.md
+overview.md          # 项目概览（技术栈、规模、目录、依赖、启动方式）
+architecture.md      # 系统架构（分层、模块依赖、调用链路）
+modules.md           # 模块详解（职责、核心文件、数据流向）
+business-flow.md     # 业务流程（用户流程、状态流转、异常处理）
+api-system.md        # 接口体系（分类、权限、请求响应、错误处理）
+infrastructure.md    # 数据与基础设施（数据库、缓存、部署）
 ```
 
 用途：
@@ -85,12 +81,11 @@ deployment.md
 内容：
 
 ```text
-architecture-audit.md
-security-audit.md
-performance-audit.md
-maintainability-audit.md
-dependency-audit.md
-audit-report.md
+code-quality-audit.md   # 代码质量审计（架构+可维护性）
+security-audit.md       # 安全审计（安全+权限）
+performance-audit.md    # 性能审计
+risk-audit.md           # 风险审计（依赖+技术债）
+audit-report.md         # 综合审计报告
 ```
 
 用途：
@@ -308,23 +303,12 @@ write-plan
 
 要求：
 
-每次仅执行一个阶段。
-
-禁止：
-
-一次执行全部任务。
+一次调用，自动执行全部任务。每个任务内部自带自检（运行测试、验证代码），仅在遇到阻塞问题时暂停。
 
 标准流程：
 
 ```text
-阶段1
-提交
-
-阶段2
-提交
-
-阶段3
-提交
+任务1 → 自检 → 任务2 → 自检 → ... → 任务N → 自检
 ```
 
 ---
@@ -364,59 +348,14 @@ Low
 
 # 推荐工作流
 
----
+详见各场景专项文档：
 
-## 接手项目
-
-```text
-Brainstorm
-↓
-Write Plan
-↓
-Execute Plan
-↓
-生成 project 目录
-```
-
----
-
-## 审计项目
-
-```text
-Review
-↓
-Write Plan
-↓
-生成 audit 目录
-```
-
----
-
-## 重构项目
-
-```text
-Review
-↓
-Write Plan
-↓
-Execute Plan
-↓
-生成 plans 目录
-```
-
----
-
-## 开发需求
-
-```text
-Brainstorm
-↓
-Write Plan
-↓
-Execute Plan
-↓
-Review
-```
+| 场景 | 文档 | 命令数 |
+|------|------|--------|
+| 接手项目 | [B接手项目需要做的.md](B接手项目需要做的.md) | 4 次 |
+| 代码审计 | [C代码审计与漏洞修复.md](C代码审计与漏洞修复.md) | 6 次 |
+| 新功能开发 | [D新功能开发流程.md](D新功能开发流程.md) | 5 次 |
+| 重构项目 | 待补充 | - |
 
 ---
 
@@ -430,29 +369,6 @@ Review
 直接修Bug
 ```
 
-必须：
+所有分析结果必须沉淀到 `.superpowers/` 目录。
 
-```text
-Brainstorm
-↓
-Write Plan
-↓
-Execute Plan
-↓
-Review
-```
-
-所有分析结果必须沉淀到：
-
-```text
-.superpowers/
-```
-
-任何新的分析、审计、重构和决策都必须形成文档。
-
-禁止只存在于聊天记录中。
-
-知识必须沉淀。
-
-```
-```
+禁止只存在于聊天记录中。知识必须沉淀。
