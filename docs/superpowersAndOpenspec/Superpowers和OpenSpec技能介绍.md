@@ -41,7 +41,10 @@
 
 **产出文件：**
 ```
-docs/superpowers/specs/YYYY-MM-DD-<主题>-design.md
+superpowers/changes/<序号>-<变更名>/design.md   （功能 / 重构）
+superpowers/changes/<序号>-<变更名>/diagnosis.md（Bug 修复）
+superpowers/project/<固定文件名>.md       （接手项目）
+superpowers/audit/<固定文件名>.md         （代码审计）
 ```
 
 **硬性规则：** 设计文档未经你批准之前，禁止生成任何代码。
@@ -56,7 +59,7 @@ docs/superpowers/specs/YYYY-MM-DD-<主题>-design.md
 
 **产出文件：**
 ```
-docs/superpowers/plans/YYYY-MM-DD-<功能名>.md
+superpowers/changes/<序号>-<变更名>/plan.md
 ```
 
 **计划特点：**
@@ -217,20 +220,20 @@ OpenSpec 是变更记录管理系统，通过 CLI 工具 `openspec` 管理每次
 
 **变更文件结构：**
 ```
-openspec/changes/<变更名>/
+openspec/changes/<序号>-<变更名>/
 ├─ proposal.md    # 为什么做这个变更（背景、目标）
 ├─ design.md      # 怎么做（设计决策、权衡）
 ├─ tasks.md       # 任务清单（- [ ] 待做，- [x] 已完成）
 └─ specs/         # 详细规格（按功能模块）
 
-openspec/changes/archive/YYYY-MM-DD-<变更名>/   # 已完成变更归档
+openspec/changes/archive/YYYY-MM-DD-<序号>-<变更名>/   # 已完成变更归档
 ```
 
 ---
 
 ### `openspec-explore` — 探索模式
 
-**命令：** `/opsx:explore` 或 `/opsx:explore <变更名>`
+**命令：** `/opsx:explore` 或 `/opsx:explore <序号>-<变更名>`
 
 **作用：** 进入只读探索状态，作为思维伙伴帮你探索想法、分析问题、澄清需求。可以读代码、画架构图、比较方案，但绝对不写任何应用代码。
 
@@ -252,12 +255,12 @@ openspec/changes/archive/YYYY-MM-DD-<变更名>/   # 已完成变更归档
 
 ### `openspec-propose` — 创建变更提案
 
-**命令：** `/opsx:propose <变更名>`
+**命令：** `/opsx:propose <序号>-<变更名>`
 
 **作用：** 通过 `openspec new change` 命令创建变更目录，然后按依赖顺序依次生成 `proposal.md`、`design.md`、`tasks.md`，让变更立即进入可实施状态。
 
 **流程：**
-1. 运行 `openspec new change "<变更名>"` 创建目录
+1. 运行 `openspec new change "<序号>-<变更名>"` 创建目录
 2. 运行 `openspec status --json` 获取需要生成的文档列表
 3. 按依赖顺序逐个生成文档
 4. 展示最终状态，提示可运行 `/opsx:apply` 开始实施
@@ -266,7 +269,7 @@ openspec/changes/archive/YYYY-MM-DD-<变更名>/   # 已完成变更归档
 
 ### `openspec-apply-change` — 执行变更任务
 
-**命令：** `/opsx:apply` 或 `/opsx:apply <变更名>`
+**命令：** `/opsx:apply` 或 `/opsx:apply <序号>-<变更名>`
 
 **作用：** 读取变更记录中的 `tasks.md`，逐条实现任务，每完成一条立即将 `- [ ]` 改为 `- [x]`。
 
@@ -283,7 +286,7 @@ openspec/changes/archive/YYYY-MM-DD-<变更名>/   # 已完成变更归档
 
 ### `openspec-archive-change` — 归档已完成变更
 
-**命令：** `/opsx:archive` 或 `/opsx:archive <变更名>`
+**命令：** `/opsx:archive` 或 `/opsx:archive <序号>-<变更名>`
 
 **作用：** 将完成的变更从 `openspec/changes/` 移动到带日期前缀的归档目录，并检查是否需要同步 delta specs。
 
@@ -292,7 +295,7 @@ openspec/changes/archive/YYYY-MM-DD-<变更名>/   # 已完成变更归档
 2. 检查文档是否全部完成（未完成则警告并确认）
 3. 检查任务清单是否全部打钩（未完成则警告并确认）
 4. 检查 delta specs 是否需要同步到主规格
-5. 执行归档（移动目录，加日期前缀 `YYYY-MM-DD-<变更名>`）
+5. 执行归档（移动目录，加日期前缀 `YYYY-MM-DD-<序号>-<变更名>`）
 
 ---
 
@@ -316,11 +319,6 @@ systematic-debugging → TDD 修复 → verification-before-completion
 
 ---
 
-## 五、文件产出位置汇总
+---
 
-| 技能 | 产出文件 | 存放位置 |
-|------|---------|---------|
-| `brainstorming` | 设计文档 | `docs/superpowers/specs/YYYY-MM-DD-<主题>-design.md` |
-| `writing-plans` | 实施计划 | `docs/superpowers/plans/YYYY-MM-DD-<功能名>.md` |
-| `openspec-propose` | 变更文档 | `openspec/changes/<变更名>/` |
-| `openspec-archive-change` | 归档记录 | `openspec/changes/archive/YYYY-MM-DD-<变更名>/` |
+> 各技能产出文件的完整路径规范见 [文档管理规范.md](文档管理规范.md)。
