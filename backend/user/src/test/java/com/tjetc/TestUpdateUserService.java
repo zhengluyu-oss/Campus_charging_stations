@@ -18,6 +18,5 @@ public class TestUpdateUserService {
         assert user.getId() != null : "用户ID不应为null";
         System.out.println("用户ID: " + user.getId());
         System.out.println("用户名: " + user.getUsername());
-        System.out.println("邮箱: " + user.getEmail());
+        System.out.println("邮箱: " + user.getEmail()
     }
-}

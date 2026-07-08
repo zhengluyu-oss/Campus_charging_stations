@@ -49,3 +49,6 @@ application-dev.yml
 # Temporary files
 *.tmp
 *.temp
+
+# Superpowers AI 工作流文档（本地追溯，不提交）
+superpowers/changes/

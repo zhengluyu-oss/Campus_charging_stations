@@ -124,7 +124,9 @@ superpowers/changes/<序号>-<变更名>/plan.md
 
 **作用：** 在独立的 git worktree 中进行开发，避免影响当前分支。
 
-**触发方式：** 开始执行开发计划之前，AI 自动调用。
+**触发方式：** Superpowers 原生流程可能在开始执行开发计划前调用；但本项目新功能和 Bug 修复默认不调用。
+
+**本项目约束：** 新功能开发和 Bug 修复默认不使用该技能创建 worktree。用户会在开发前手动创建并切换到新功能 / 修复分支，AI 只在当前分支工作；只有用户明确要求使用 worktree 时，才允许调用该技能。
 
 **流程：**
 1. 检测是否已在隔离工作区（已在则跳过）
@@ -214,15 +216,14 @@ superpowers/changes/<序号>-<变更名>/plan.md
 
 ## 三、OpenSpec 技能列表
 
-OpenSpec 是变更记录管理系统，通过 CLI 工具 `openspec` 管理每次代码变更的完整文档。
+OpenSpec 是轻量变更记录管理系统，通过 CLI 工具 `openspec` 管理低风险小改动的 proposal / tasks / archive。
 
 **前提：** 需要已安装 `openspec` CLI 工具。
 
-**变更文件结构：**
+**轻量变更文件结构：**
 ```
 openspec/changes/<序号>-<变更名>/
 ├─ proposal.md    # 为什么做这个变更（背景、目标）
-├─ design.md      # 怎么做（设计决策、权衡）
 ├─ tasks.md       # 任务清单（- [ ] 待做，- [x] 已完成）
 └─ specs/         # 详细规格（按功能模块）
 
@@ -257,13 +258,15 @@ openspec/changes/archive/YYYY-MM-DD-<序号>-<变更名>/   # 已完成变更归
 
 **命令：** `/opsx:propose <序号>-<变更名>`
 
-**作用：** 通过 `openspec new change` 命令创建变更目录，然后按依赖顺序依次生成 `proposal.md`、`design.md`、`tasks.md`，让变更立即进入可实施状态。
+**作用：** 通过 `openspec new change` 命令创建轻量变更目录，然后生成 `proposal.md`、`tasks.md`，让低风险小改动立即进入可实施状态。
 
 **流程：**
 1. 运行 `openspec new change "<序号>-<变更名>"` 创建目录
 2. 运行 `openspec status --json` 获取需要生成的文档列表
 3. 按依赖顺序逐个生成文档
 4. 展示最终状态，提示可运行 `/opsx:apply` 开始实施
+
+**本项目约束：** 路径 A 质量流程和 Bug 修复流程不使用 `/opsx:propose`，避免形成第二套设计、任务和归档。
 
 ---
 
@@ -275,7 +278,7 @@ openspec/changes/archive/YYYY-MM-DD-<序号>-<变更名>/   # 已完成变更归
 
 **流程：**
 1. 确认要实施的变更（可从上下文推断或询问）
-2. 读取 `proposal.md`、`design.md`、`tasks.md` 等全部上下文
+2. 读取 `proposal.md`、`tasks.md` 等全部上下文
 3. 展示当前进度（已完成 N/M 个任务）
 4. 逐条实现待完成任务
 5. 遇到歧义或设计问题暂停，等待指导
@@ -303,9 +306,14 @@ openspec/changes/archive/YYYY-MM-DD-<序号>-<变更名>/   # 已完成变更归
 
 ```
 Superpowers 开发主链：
-brainstorming → writing-plans → using-git-worktrees
+brainstorming → 当前分支检查 → writing-plans
 → subagent-driven-development（内含 TDD + requesting-code-review）
 → finishing-a-development-branch
+
+Superpowers Bug 修复链：
+systematic-debugging → 当前分支检查 → writing-plans
+→ TDD 修复 → requesting-code-review
+→ verification-before-completion → finishing-a-development-branch
 
 OpenSpec 变更记录链：
 /opsx:explore（可选）→ /opsx:propose → /opsx:apply → /opsx:archive
@@ -314,7 +322,7 @@ OpenSpec 变更记录链：
 brainstorming 或 /opsx:explore
 
 遇到 Bug：
-systematic-debugging → TDD 修复 → verification-before-completion
+走 Superpowers Bug 修复链；不创建 OpenSpec 账本
 ```
 
 ---
