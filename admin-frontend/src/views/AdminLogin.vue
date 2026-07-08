@@ -90,7 +90,7 @@ const rules: FormRules = {
   password: [{ required: true, message: 'Please enter password', trigger: 'blur' }],
 }
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   const size = Math.random() * 4 + 1
   const x = Math.random() * 100
   const y = Math.random() * 100
@@ -119,6 +119,9 @@ async function handleLogin() {
       password: form.password,
     })
     adminStore.setToken(res.data.token)
+    if (res.data.refreshToken) {
+      adminStore.setRefreshToken(res.data.refreshToken)
+    }
     if (res.data.admin) {
       adminStore.setAdmin(res.data.admin)
     }

@@ -17,13 +17,19 @@ export interface AdminInfo {
 
 export const useAdminStore = defineStore('admin', () => {
   const token = ref('')
+  const refreshToken = ref('')
   const admin = ref<AdminInfo | undefined>(undefined)
   const sidebarCollapsed = ref(false)
 
   const getToken = computed(() => token.value)
+  const getRefreshToken = computed(() => refreshToken.value)
 
   function setToken(newToken: string) {
     token.value = newToken
+  }
+
+  function setRefreshToken(newRefreshToken: string) {
+    refreshToken.value = newRefreshToken
   }
 
   function setAdmin(info: AdminInfo) {
@@ -36,15 +42,19 @@ export const useAdminStore = defineStore('admin', () => {
 
   function logout() {
     token.value = ''
+    refreshToken.value = ''
     admin.value = undefined
   }
 
   return {
     token,
+    refreshToken,
     admin,
     sidebarCollapsed,
     getToken,
+    getRefreshToken,
     setToken,
+    setRefreshToken,
     setAdmin,
     toggleSidebar,
     logout,
