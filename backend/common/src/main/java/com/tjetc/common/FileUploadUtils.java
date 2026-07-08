@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -26,22 +27,26 @@ public class FileUploadUtils {
     );
 
     // 扩展名对应的允许 MIME 类型
-    private static final Map<String, Set<String>> ALLOWED_MIME_TYPES = Map.of(
-            "jpg", Set.of("image/jpeg"),
-            "jpeg", Set.of("image/jpeg"),
-            "png", Set.of("image/png"),
-            "gif", Set.of("image/gif"),
-            "webp", Set.of("image/webp"),
-            "bmp", Set.of("image/bmp"),
-            "mp4", Set.of("video/mp4"),
-            "avi", Set.of("video/x-msvideo", "video/avi"),
-            "mov", Set.of("video/quicktime"),
-            "mkv", Set.of("video/x-matroska"),
-            "wmv", Set.of("video/x-ms-wmv"),
-            "flv", Set.of("video/x-flv"),
-            "mp3", Set.of("audio/mpeg"),
-            "wav", Set.of("audio/wav")
-    );
+    private static final Map<String, Set<String>> ALLOWED_MIME_TYPES = buildAllowedMimeTypes();
+
+    private static Map<String, Set<String>> buildAllowedMimeTypes() {
+        Map<String, Set<String>> map = new HashMap<>();
+        map.put("jpg", Set.of("image/jpeg"));
+        map.put("jpeg", Set.of("image/jpeg"));
+        map.put("png", Set.of("image/png"));
+        map.put("gif", Set.of("image/gif"));
+        map.put("webp", Set.of("image/webp"));
+        map.put("bmp", Set.of("image/bmp"));
+        map.put("mp4", Set.of("video/mp4"));
+        map.put("avi", Set.of("video/x-msvideo", "video/avi"));
+        map.put("mov", Set.of("video/quicktime"));
+        map.put("mkv", Set.of("video/x-matroska"));
+        map.put("wmv", Set.of("video/x-ms-wmv"));
+        map.put("flv", Set.of("video/x-flv"));
+        map.put("mp3", Set.of("audio/mpeg"));
+        map.put("wav", Set.of("audio/wav"));
+        return Map.copyOf(map);
+    }
 
     // 文件大小限制（字节）
     private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;   // 10MB

@@ -57,22 +57,11 @@
     </select>
 
 
-    <update id="updateChargingStationStatus">
-            update charging_stations
-            set status = 1
-            where station_id = #{stationId}
-    </update>
-
-    <update id="stopUpdateChargingStationStatus">
-        update charging_stations
-        set status = 0
-        where station_id = #{stationId}
-    </update>
-
-    <update id="updateChargingStationStatusAndTime">
-        update charging_stations
-        set status = 1
-        where station_id = #{stationId}
+    <!-- 通用更新充电桩状态（参数化） -->
+    <update id="updateStatus">
+        UPDATE charging_stations
+        SET status = #{status}
+        WHERE station_id = #{stationId}
     </update>
 
     <!-- 条件更新充电桩状态（CAS 乐观锁），防止竞态条件 -->
