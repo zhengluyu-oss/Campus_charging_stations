@@ -31,11 +31,13 @@ public class PaymentsServiceImpl implements PaymentsService {
     @Override
     public JsonResult<Payments> findAll() {
         try {
+            // 添加默认分页保护，避免全表数据量过大时 OOM
+            com.github.pagehelper.PageHelper.startPage(1, 1000);
             List<Payments> paymentsList = paymentsMapper.selectList(null);
             return JsonResult.success(paymentsList);
         } catch (Exception e) {
             log.error("查询所有支付记录失败", e);
-            return JsonResult.fail("查询所有支付记录失败：" + e.getMessage());
+            return JsonResult.fail("查询所有支付记录失败，请稍后重试");
         }
     }
 
@@ -64,7 +66,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.fail("新增支付记录失败：数据库未受影响");
         } catch (Exception e) {
             log.error("新增支付记录异常", e);
-            return JsonResult.fail("新增支付记录失败：" + e.getMessage());
+            return JsonResult.fail("新增支付记录失败，请稍后重试");
         }
     }
 
@@ -83,7 +85,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.success(paymentsList);
         } catch (Exception e) {
             log.error("按订单ID查询支付记录失败，orderId：{}", orderId, e);
-            return JsonResult.fail("查询支付记录失败：" + e.getMessage());
+            return JsonResult.fail("查询支付记录失败，请稍后重试");
         }
     }
 
@@ -105,7 +107,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.success(paymentsPage);
         } catch (Exception e) {
             log.error("按支付状态分页查询失败，status：{}", paymentStatus, e);
-            return JsonResult.fail("分页查询支付记录失败：" + e.getMessage());
+            return JsonResult.fail("分页查询支付记录失败，请稍后重试");
         }
     }
 
@@ -127,7 +129,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.success(paymentsPage);
         } catch (Exception e) {
             log.error("按支付方式分页查询失败，method：{}", paymentMethod, e);
-            return JsonResult.fail("分页查询支付记录失败：" + e.getMessage());
+            return JsonResult.fail("分页查询支付记录失败，请稍后重试");
         }
     }
 
@@ -149,7 +151,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.success(payments);
         } catch (Exception e) {
             log.error("按ID查询支付记录失败，id：{}", id, e);
-            return JsonResult.fail("查询支付记录失败：" + e.getMessage());
+            return JsonResult.fail("查询支付记录失败，请稍后重试");
         }
     }
 
@@ -177,7 +179,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.fail("更新失败：未找到对应支付记录或无变更");
         } catch (Exception e) {
             log.error("更新支付状态失败，paymentId：{}", paymentId, e);
-            return JsonResult.fail("更新支付状态失败：" + e.getMessage());
+            return JsonResult.fail("更新支付状态失败，请稍后重试");
         }
     }
 
@@ -200,7 +202,7 @@ public class PaymentsServiceImpl implements PaymentsService {
             return JsonResult.fail("删除失败：未找到对应支付记录");
         } catch (Exception e) {
             log.error("删除支付记录失败，id：{}", id, e);
-            return JsonResult.fail("删除支付记录失败：" + e.getMessage());
+            return JsonResult.fail("删除支付记录失败，请稍后重试");
         }
     }
 }

@@ -9,10 +9,9 @@ import com.tjetc.entity.core.ChargingStation;
 import com.tjetc.service.service.coreFunction.ChargingStationSelectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-@ResponseBody
+
 @Service
 public class ChargingStationSelectServiceImpl implements ChargingStationSelectService {
 

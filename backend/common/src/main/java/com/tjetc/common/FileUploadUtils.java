@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,19 +21,41 @@ public class FileUploadUtils {
             "jpg", "jpeg", "png", "gif", "webp", "bmp",
             // 视频
             "mp4", "avi", "mov", "mkv", "wmv", "flv",
-            // 文档（如需要可取消注释）
-            // "pdf", "doc", "docx", "xls", "xlsx",
-            // 其他
+            // 音频
             "mp3", "wav"
     );
+
+    // 扩展名对应的允许 MIME 类型
+    private static final Map<String, Set<String>> ALLOWED_MIME_TYPES = Map.of(
+            "jpg", Set.of("image/jpeg"),
+            "jpeg", Set.of("image/jpeg"),
+            "png", Set.of("image/png"),
+            "gif", Set.of("image/gif"),
+            "webp", Set.of("image/webp"),
+            "bmp", Set.of("image/bmp"),
+            "mp4", Set.of("video/mp4"),
+            "avi", Set.of("video/x-msvideo", "video/avi"),
+            "mov", Set.of("video/quicktime"),
+            "mkv", Set.of("video/x-matroska"),
+            "wmv", Set.of("video/x-ms-wmv"),
+            "flv", Set.of("video/x-flv"),
+            "mp3", Set.of("audio/mpeg"),
+            "wav", Set.of("audio/wav")
+    );
+
+    // 文件大小限制（字节）
+    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;   // 10MB
+    private static final long MAX_VIDEO_SIZE = 100 * 1024 * 1024;  // 100MB
+    private static final long MAX_AUDIO_SIZE = 20 * 1024 * 1024;   // 20MB
+    private static final long MAX_DEFAULT_SIZE = 10 * 1024 * 1024; // 10MB
 
     /**
      * 上传文件
      *
      * @param multipartFile    文件对象
      * @param basePath         文件存储位置的基本路径
-     * @param returnPathPrefix 文件返回url前缀
-     * @return
+     * @param returnPathPrefix 文件返回url前缀（file/image/video）
+     * @return JsonResult
      */
     public static JsonResult upload(MultipartFile multipartFile,
                                     String basePath,
@@ -40,6 +63,12 @@ public class FileUploadUtils {
         // 检查文件是否为空
         if (multipartFile == null || multipartFile.isEmpty()) {
             return JsonResult.fail("上传文件不能为空");
+        }
+
+        // 检查文件大小
+        long maxSize = getMaxSize(returnPathPrefix);
+        if (multipartFile.getSize() > maxSize) {
+            return JsonResult.fail("文件大小超过限制，最大允许: " + (maxSize / 1024 / 1024) + "MB");
         }
 
         // 上传文件的原始名称
@@ -61,7 +90,13 @@ public class FileUploadUtils {
 
         // 校验文件扩展名是否在白名单中
         if (!ALLOWED_EXTENSIONS.contains(suffixName)) {
-            return JsonResult.fail("不支持的文件类型: " + suffixName + "。允许的类型: " + ALLOWED_EXTENSIONS);
+            return JsonResult.fail("不支持的文件类型: " + suffixName);
+        }
+
+        // 校验 MIME 类型与扩展名是否匹配
+        String contentType = multipartFile.getContentType();
+        if (!isMimeTypeAllowed(suffixName, contentType)) {
+            return JsonResult.fail("文件内容类型与扩展名不匹配");
         }
 
         // 增加一个日期目录
@@ -78,7 +113,7 @@ public class FileUploadUtils {
             basePathFile.mkdirs();
         }
 
-        // 生成新的文件名称
+        // 生成新的文件名称（UUID 避免文件名冲突和路径遍历）
         String newFileName = UUID.randomUUID().toString().replaceAll("-", "");
 
         // 文件的全路径
@@ -97,6 +132,34 @@ public class FileUploadUtils {
     }
 
     /**
+     * 根据上传类型获取最大文件大小
+     */
+    private static long getMaxSize(String type) {
+        return switch (type) {
+            case "image" -> MAX_IMAGE_SIZE;
+            case "video" -> MAX_VIDEO_SIZE;
+            case "audio" -> MAX_AUDIO_SIZE;
+            default -> MAX_DEFAULT_SIZE;
+        };
+    }
+
+    /**
+     * 校验 MIME 类型是否与扩展名匹配
+     */
+    private static boolean isMimeTypeAllowed(String extension, String contentType) {
+        if (contentType == null || contentType.isBlank()) {
+            return false;
+        }
+        Set<String> allowed = ALLOWED_MIME_TYPES.get(extension);
+        if (allowed == null) {
+            return false;
+        }
+        // 取 MIME 类型的主类型（忽略 charset 等参数）
+        String baseMimeType = contentType.split(";")[0].trim().toLowerCase();
+        return allowed.contains(baseMimeType);
+    }
+
+    /**
      * 净化文件名，移除路径遍历字符
      */
     private static String sanitizeFilename(String filename) {
@@ -110,6 +173,8 @@ public class FileUploadUtils {
         }
         // 移除空字节和其他危险字符
         filename = filename.replace("\0", "");
+        // 移除特殊字符，只保留字母数字下划线连字符点
+        filename = filename.replaceAll("[^a-zA-Z0-9._\\-\\u4e00-\\u9fa5]", "_");
         // 如果文件名为空，返回默认名
         if (filename.isBlank()) {
             return "unknown";

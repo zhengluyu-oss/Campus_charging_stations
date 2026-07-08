@@ -43,6 +43,9 @@ build/
 # Claude Code
 .claude/
 
+# 开发环境配置（含敏感信息）
+application-dev.yml
+
 # Temporary files
 *.tmp
 *.temp

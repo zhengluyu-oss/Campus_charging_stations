@@ -25,6 +25,8 @@ public class SystemLogServiceImpl implements SystemLogService {
 
     @Override
     public JsonResult<SystemLog> findAll() {
+        // 添加默认分页保护，避免全表数据量过大时 OOM
+        PageHelper.startPage(1, 1000);
         List<SystemLog> systemLogs = systemLogMapper.selectList(null);
         return JsonResult.success(systemLogs);
     }

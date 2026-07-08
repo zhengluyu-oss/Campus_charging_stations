@@ -15,9 +15,7 @@ public class GlobalAdviceController {
     //处理Exception或者Exception子类异常，简言之处理所有的异常
     @ExceptionHandler(Exception.class)
     public JsonResult exception(Exception e) {
-        e.printStackTrace();
-        //记录日志
-        //log.error("异常信息:", e.getCause());
+        log.error("全局异常处理捕获异常", e);
         return JsonResult.fail("出错了，请联系管理员");
     }
 }

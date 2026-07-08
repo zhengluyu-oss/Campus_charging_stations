@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS orders (
     duration_minutes INT DEFAULT NULL COMMENT '充电时长(分钟)',
     total_amount DOUBLE DEFAULT NULL COMMENT '总金额(元)',
     payment_status VARCHAR(20) DEFAULT 'unpaid' COMMENT '支付状态(unpaid/paid/refunded)',
+    order_status VARCHAR(20) NOT NULL DEFAULT 'pending' COMMENT '订单状态(pending/charging/completed/cancelled)',
     created_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     KEY idx_user_id (user_id),
     KEY idx_station_id (station_id)

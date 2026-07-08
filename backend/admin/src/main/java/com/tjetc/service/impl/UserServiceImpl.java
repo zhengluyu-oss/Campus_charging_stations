@@ -7,12 +7,14 @@ import com.tjetc.dao.UserMapper;
 import com.tjetc.dto.UserDTO;
 import com.tjetc.entity.userAndAdmin.User;
 
+import com.tjetc.common.PasswordUtils;
 import com.tjetc.service.UserService;
 import org.springframework.beans.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * 查询所有用户（返回结果中密码已脱敏）
      * @return JsonResult<User> - 成功：返回所有用户列表（密码为空）；失败：返回错误信息
@@ -33,12 +38,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public JsonResult<User> findAll() {
         try {
+            // 添加默认分页保护，避免全表数据量过大时 OOM
+            com.github.pagehelper.PageHelper.startPage(1, 1000);
             List<User> userList = userMapper.selectList(null);
             userList.forEach(user -> user.setPassword(null));
             return JsonResult.success(userList);
         } catch (Exception e) {
             log.error("查询所有用户失败", e);
-            return JsonResult.fail("查询所有用户失败：" + e.getMessage());
+            return JsonResult.fail("查询所有用户失败，请稍后重试");
         }
     }
 
@@ -67,6 +74,7 @@ public class UserServiceImpl implements UserService {
             // 将DTO转换为实体类
             User user = new User();
             BeanUtils.copyProperties(userDTO, user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setCreatedTime(LocalDateTime.now());
             user.setUpdatedTime(LocalDateTime.now());
             if (ObjectUtils.isEmpty(user.getUserType())) {
@@ -79,7 +87,7 @@ public class UserServiceImpl implements UserService {
             return JsonResult.fail("新增用户失败：数据库未受影响");
         } catch (Exception e) {
             log.error("新增用户异常，username：{}", userDTO.getUsername(), e);
-            return JsonResult.fail("新增用户失败：" + e.getMessage());
+            return JsonResult.fail("新增用户失败，请稍后重试");
         }
     }
 
@@ -103,7 +111,7 @@ public class UserServiceImpl implements UserService {
             return JsonResult.success(userPage);
         } catch (Exception e) {
             log.error("按用户名分页查询失败，username：{}", username, e);
-            return JsonResult.fail("分页查询用户失败：" + e.getMessage());
+            return JsonResult.fail("分页查询用户失败，请稍后重试");
         }
     }
 
@@ -119,15 +127,32 @@ public class UserServiceImpl implements UserService {
             if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
                 return JsonResult.fail("用户名和密码不能为空");
             }
-            User user = userMapper.selectByUsernameAndPassword(username, password);
-            if (ObjectUtils.isEmpty(user)) {
+            User user = userMapper.selectByUsername(username.trim());
+            if (user == null) {
+                return JsonResult.fail("用户名或密码错误");
+            }
+            String stored = user.getPassword();
+            boolean matches;
+            if (PasswordUtils.isBcryptHash(stored)) {
+                matches = passwordEncoder.matches(password.trim(), stored);
+            } else {
+                matches = password.trim().equals(stored);
+                if (matches) {
+                    User toUpdate = new User();
+                    toUpdate.setId(user.getId());
+                    toUpdate.setPassword(passwordEncoder.encode(password.trim()));
+                    userMapper.updateById(toUpdate);
+                    log.info("用户 {} 的密码已自动迁移到 BCrypt 加密", username);
+                }
+            }
+            if (!matches) {
                 return JsonResult.fail("用户名或密码错误");
             }
             user.setPassword(null);
             return JsonResult.success("登录成功", user);
         } catch (Exception e) {
             log.error("用户登录异常，username：{}", username, e);
-            return JsonResult.fail("登录失败：" + e.getMessage());
+            return JsonResult.fail("登录失败，请稍后重试");
         }
     }
 
@@ -146,7 +171,7 @@ public class UserServiceImpl implements UserService {
             return JsonResult.success(user != null);
         } catch (Exception e) {
             log.error("检查用户名存在性失败，username：{}", username, e);
-            return JsonResult.fail("检查用户名失败：" + e.getMessage());
+            return JsonResult.fail("检查用户名失败，请稍后重试");
         }
     }
 
@@ -169,7 +194,7 @@ public class UserServiceImpl implements UserService {
             return JsonResult.success(user);
         } catch (Exception e) {
             log.error("按ID查询用户失败，id：{}", id, e);
-            return JsonResult.fail("查询用户失败：" + e.getMessage());
+            return JsonResult.fail("查询用户失败，请稍后重试");
         }
     }
 
@@ -204,7 +229,7 @@ public class UserServiceImpl implements UserService {
             return JsonResult.fail("更新失败：无变更或用户不存在");
         } catch (Exception e) {
             log.error("更新用户信息异常，userId：{}", userDTO.getUserId(), e);
-            return JsonResult.fail("更新用户失败：" + e.getMessage());
+            return JsonResult.fail("更新用户失败，请稍后重试");
         }
     }
 
@@ -231,7 +256,7 @@ public class UserServiceImpl implements UserService {
             return JsonResult.fail("删除用户失败");
         } catch (Exception e) {
             log.error("删除用户异常，userId：{}", id, e);
-            return JsonResult.fail("删除用户失败：" + e.getMessage());
+            return JsonResult.fail("删除用户失败，请稍后重试");
         }
     }
 }

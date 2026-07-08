@@ -106,6 +106,15 @@ import { ElMessage } from 'element-plus';
 import { getAllChargingStations, getChargingStationsByLocation, getChargingStationsByStatus } from '@/api/chargingStationsApi';
 import type { ChargingStation } from '@/viewmodel/ChargingStationModel';
 
+// debounce 工具函数
+function debounce<T extends (...args: any[]) => any>(fn: T, delay: number): T {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  return ((...args: any[]) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  }) as T;
+}
+
 const router = useRouter();
 
 // 筛选条件
@@ -194,8 +203,8 @@ const paginatedStations = computed(() => {
 });
 
 
-// 应用筛选
-const applyFilters = async () => {
+// 应用筛选（原始函数）
+const applyFiltersRaw = async () => {
   currentPage.value = 1; // 重置到第一页
 
   // 每次筛选时都从后端获取最新数据，然后应用筛选条件
@@ -255,6 +264,9 @@ const applyFilters = async () => {
     loading.value = false;
   }
 };
+
+// 应用筛选（debounce 版本，300ms 延迟）
+const applyFilters = debounce(applyFiltersRaw, 300);
 
 
 // 这个函数现在不再需要，因为我们不再使用地图标记

@@ -37,6 +37,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public JsonResult<AdminDTO> findAll() {
         //selectList 是mybatisplus提供的单表的查询数据
+        // 添加默认分页保护，避免全表数据量过大时 OOM
+        PageHelper.startPage(1, 1000);
         List<Admin> admins = adminMapper.selectList(null);
         //转换为DTO列表
         List<AdminDTO> adminDTOs = admins.stream().map(admin -> {

@@ -36,7 +36,7 @@ public class ChargingAsyncService {
             createOrder(userId, stationId, startTime, chargingDuration, pricePerHour);
 
         } catch (InterruptedException e) {
-            log.error("充电定时任务异常: {}", e.getMessage());
+            log.error("充电定时任务异常，stationId：{}", stationId, e);
             Thread.currentThread().interrupt();
         }
     }
@@ -62,7 +62,7 @@ public class ChargingAsyncService {
             createOrder(userId, stationId, startStr, chargingDuration, pricePerHour);
 
         } catch (InterruptedException e) {
-            log.error("预约充电定时任务异常: {}", e.getMessage());
+            log.error("预约充电定时任务异常，stationId：{}", stationId, e);
             Thread.currentThread().interrupt();
         }
     }
@@ -76,7 +76,8 @@ public class ChargingAsyncService {
         order.setEndTime(LocalDateTime.now().format(DF));
         order.setDurationMinutes(chargingDuration);
         order.setTotalAmount(pricePerHour * chargingDuration / 60.0);
-        order.setPaymentStatus("微信支付");
+        order.setPaymentStatus("unpaid");
+        order.setOrderStatus("pending");
         order.setCreatedTime(LocalDateTime.now().format(DF));
 
         orderMapper.insert(order);

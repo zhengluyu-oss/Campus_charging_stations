@@ -30,18 +30,22 @@ public class ChargingStationUseServiceImpl implements ChargingStationUseService 
         if (userId == null) {
             return AuthUtils.forbiddenUserMismatch();
         }
+        // 先查询充电桩是否存在及获取价格信息（不做状态判断，状态判断交给条件更新）
         ChargingStation station = chargingStationsMapper.selectById(stationId);
         if (station == null) {
             return JsonResult.fail("充电桩不存在");
         }
-        if ("1".equals(station.getStatus())) {
-            return JsonResult.fail("充电桩正在使用中");
+
+        // 使用 CAS 条件更新：仅当状态为"0"（空闲）时才更新为"1"（使用中）
+        // 返回受影响行数，0 表示充电桩已被其他用户抢先使用
+        int affectedRows = chargingStationsMapper.updateStatusIfAvailable(stationId, "1", "0");
+        if (affectedRows == 0) {
+            return JsonResult.fail("充电桩正在使用中或状态已变更，请刷新后重试");
         }
 
         LocalDateTime startTime = LocalDateTime.now();
         String startStr = startTime.format(DF);
 
-        chargingStationsMapper.updateChargingStationStatusAndTime(stationId);
         log.info("用户{}开始使用充电桩{}，充电时长{}分钟", userId, stationId, chargingDuration);
 
         chargingAsyncService.startChargingTimer(userId, stationId, chargingDuration, startStr, station.getPricePerHour());

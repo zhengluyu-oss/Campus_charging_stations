@@ -57,7 +57,7 @@
           <el-form-item label="密码">
             <div class="password-field">
               <el-input
-                v-model="userInfo.password"
+                v-model="editPassword"
                 type="password"
                 show-password
                 :readonly="!isEditing"
@@ -119,13 +119,14 @@ const particles = Array.from({ length: 50 }, () => ({
 const formRef = ref();
 const avatarInputRef = ref();
 const isEditing = ref(false);
+const editPassword = ref(''); // 独立的密码编辑变量，不存储在 userInfo 中
 const userStore = useUserStore();
 
 // 用户信息
 const userInfo = reactive<User>({
   id: 0,
   username: '',
-  password: '',
+  // password 字段已移至 editPassword ref
   avatarPath: 'https://cube.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
   email: '',
   telephone: '',
@@ -153,9 +154,8 @@ const rules = reactive({
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
   ],
-  password: [
-    { min: 6, message: '密码长度至少为6位', trigger: 'blur' }
-  ]
+  // password 验证规则已移除，因为 password 字段已从 userInfo 中移除
+  // 如需验证 editPassword，可单独处理
 });
 
 
@@ -173,7 +173,7 @@ onMounted(async () => {
           ...userInfo,
           id: response.data.id || userInfo.id,
           username: response.data.username || userInfo.username,
-          password: response.data.password || userInfo.password || '', // 保留现有密码或使用空字符串
+          // password 不再存储在 userInfo 中
           avatarPath: response.data.avatarPath || response.data.avatar_path || userInfo.avatarPath,
           email: response.data.email || userInfo.email,
           telephone: response.data.telephone || response.data.phone || userInfo.telephone, // 兼容不同字段名
@@ -194,7 +194,7 @@ onMounted(async () => {
         ...userInfo,
         id: userStore.user.id || userInfo.id,
         username: userStore.user.username || userInfo.username,
-        password: userStore.user.password || userInfo.password || '', // 使用空字符串作为默认值
+        // password 不再存储在 userInfo 中
         avatarPath: userStore.user.avatarPath || userStore.user.avatar_path || userInfo.avatarPath,
         email: userStore.user.email || userInfo.email,
         telephone: userStore.user.telephone || userStore.user.phone || userInfo.telephone, // 兼容不同字段名
@@ -237,7 +237,7 @@ const toggleEdit = async () => {
           const response = await updateOwnMessage(
             userId,
             userInfo.username,
-            userInfo.password || '',
+            editPassword.value || '',
             avatarPath,
             userInfo.email,
             userInfo.telephone,
@@ -255,7 +255,7 @@ const toggleEdit = async () => {
             });
             ElMessage.success('个人信息更新成功！');
             isEditing.value = false;
-            userInfo.password = '';
+            editPassword.value = ''; // 清空密码输入框
             avatarFile.value = null;
           } else {
             ElMessage.error(response?.message || response?.msg || '更新失败');
@@ -284,6 +284,7 @@ const resetForm = () => {
   Object.assign(userInfo, userStore.user);
   formRef.value.clearValidate();
   isEditing.value = false;
+  editPassword.value = ''; // 清空密码输入框
 
   // 清空临时头像文件
   avatarFile.value = null;

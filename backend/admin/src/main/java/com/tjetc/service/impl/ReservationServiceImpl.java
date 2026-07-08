@@ -31,11 +31,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public JsonResult<Reservation> findAll() {
         try {
+            // 添加默认分页保护，避免全表数据量过大时 OOM
+            com.github.pagehelper.PageHelper.startPage(1, 1000);
             List<Reservation> reservationList = reservationMapper.selectList(null);
             return JsonResult.success(reservationList);
         } catch (Exception e) {
             log.error("查询所有预约记录失败", e);
-            return JsonResult.fail("查询所有预约失败：" + e.getMessage());
+            return JsonResult.fail("查询所有预约失败，请稍后重试");
         }
     }
 
@@ -78,7 +80,7 @@ public class ReservationServiceImpl implements ReservationService {
         } catch (Exception e) {
             log.error("新增预约异常，userId：{}，stationId：{}",
                     reservationDTO.getUserId(), reservationDTO.getStationId(), e);
-            return JsonResult.fail("新增预约失败：" + e.getMessage());
+            return JsonResult.fail("新增预约失败，请稍后重试");
         }
     }
 
@@ -103,7 +105,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.success(reservationPage);
         } catch (Exception e) {
             log.error("按状态分页查询预约失败，status：{}", status, e);
-            return JsonResult.fail("分页查询预约失败：" + e.getMessage());
+            return JsonResult.fail("分页查询预约失败，请稍后重试");
         }
     }
 
@@ -128,7 +130,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.success(reservationPage);
         } catch (Exception e) {
             log.error("按用户ID分页查询预约失败，userId：{}", userId, e);
-            return JsonResult.fail("分页查询预约失败：" + e.getMessage());
+            return JsonResult.fail("分页查询预约失败，请稍后重试");
         }
     }
 
@@ -153,7 +155,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.success(reservationPage);
         } catch (Exception e) {
             log.error("按充电桩ID分页查询预约失败，stationId：{}", stationId, e);
-            return JsonResult.fail("分页查询预约失败：" + e.getMessage());
+            return JsonResult.fail("分页查询预约失败，请稍后重试");
         }
     }
 
@@ -179,7 +181,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.success(reservationList);
         } catch (Exception e) {
             log.error("按时间范围查询预约失败，stationId：{}", stationId, e);
-            return JsonResult.fail("查询预约记录失败：" + e.getMessage());
+            return JsonResult.fail("查询预约记录失败，请稍后重试");
         }
     }
 
@@ -201,7 +203,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.success(reservation);
         } catch (Exception e) {
             log.error("按ID查询预约失败，id：{}", id, e);
-            return JsonResult.fail("查询预约失败：" + e.getMessage());
+            return JsonResult.fail("查询预约失败，请稍后重试");
         }
     }
 
@@ -232,7 +234,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.fail("更新预约状态失败");
         } catch (Exception e) {
             log.error("更新预约状态异常，reservationId：{}", reservationId, e);
-            return JsonResult.fail("更新预约状态失败：" + e.getMessage());
+            return JsonResult.fail("更新预约状态失败，请稍后重试");
         }
     }
 
@@ -255,7 +257,7 @@ public class ReservationServiceImpl implements ReservationService {
             return JsonResult.fail("删除失败：未找到对应预约记录");
         } catch (Exception e) {
             log.error("删除预约记录异常，id：{}", id, e);
-            return JsonResult.fail("删除预约记录失败：" + e.getMessage());
+            return JsonResult.fail("删除预约记录失败，请稍后重试");
         }
     }
 }

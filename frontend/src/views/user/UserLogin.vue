@@ -43,11 +43,8 @@ const userHandleLogin = () => {
     if (valid) {
       isLoading.value = true
       // 校验通过，请求后端 api
-      console.log(`handleLogin().....,loginForm=${JSON.stringify(loginForm)}`)
       // Promise 只处理成功的，失败和异常不用管理
       userLogin(loginForm.username, loginForm.password).then((res) => {
-        console.log(`登录成功，res=${JSON.stringify(res)}`)
-
         // 根据后端实际返回的数据结构来处理
         // 后端返回格式为 { state: 0, message: 'jwt_token_here', data: { userInfo } }
         if (res) {
@@ -74,8 +71,7 @@ const userHandleLogin = () => {
         isLoading.value = false
       })
     } else {
-      // 校验不通过，输出哪些字段有问题
-      console.log('error submit!', fields)
+      // 校验不通过
     }
   })
 }

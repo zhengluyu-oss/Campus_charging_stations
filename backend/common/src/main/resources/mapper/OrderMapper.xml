@@ -12,11 +12,12 @@
         <result column="duration_minutes" property="durationMinutes" />
         <result column="total_amount" property="totalAmount" />
         <result column="payment_status" property="paymentStatus" />
+        <result column="order_status" property="orderStatus" />
         <result column="created_time" property="createdTime" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        order_id, user_id, station_id, start_time, end_time, duration_minutes, total_amount, payment_status, created_time
+        order_id, user_id, station_id, start_time, end_time, duration_minutes, total_amount, payment_status, order_status, created_time
     </sql>
 
     <select id="selectPageByPaymentStatus" resultMap="BaseResultMap">
@@ -66,6 +67,7 @@
         <set>
             <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
         </set>
         WHERE order_id = #{orderId}
     </update>

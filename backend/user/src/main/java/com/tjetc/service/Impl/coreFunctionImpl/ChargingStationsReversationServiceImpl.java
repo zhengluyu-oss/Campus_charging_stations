@@ -96,8 +96,8 @@ public class ChargingStationsReversationServiceImpl implements ChargingStationsR
 
             return JsonResult.success(reservationPage.getRecords());
         } catch (Exception e) {
-            logger.error("查询用户预约记录时发生异常", e);
-            return JsonResult.fail("系统异常：" + e.getMessage());
+            logger.error("查询用户预约记录时发生异常，userId：{}", userIdInt, e);
+            return JsonResult.fail("系统异常，请稍后重试");
         }
     }
 
@@ -118,8 +118,8 @@ public class ChargingStationsReversationServiceImpl implements ChargingStationsR
 
             return JsonResult.success(reservationPage.getRecords());
         } catch (Exception e) {
-            logger.error("查询充电桩预约记录时发生异常", e);
-            return JsonResult.fail("系统异常：" + e.getMessage());
+            logger.error("查询充电桩预约记录时发生异常，stationId：{}", stationId, e);
+            return JsonResult.fail("系统异常，请稍后重试");
         }
     }
 
@@ -155,8 +155,8 @@ public class ChargingStationsReversationServiceImpl implements ChargingStationsR
 
             return JsonResult.success(reservations);
         } catch (Exception e) {
-            logger.error("查询时间段内充电桩预约记录时发生异常", e);
-            return JsonResult.fail("系统异常：" + e.getMessage());
+            logger.error("查询时间段内充电桩预约记录时发生异常，stationId：{}", stationId, e);
+            return JsonResult.fail("系统异常，请稍后重试");
         }
     }
 }

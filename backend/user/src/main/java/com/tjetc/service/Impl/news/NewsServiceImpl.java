@@ -14,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.redis.core.ScanOptions;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -162,14 +165,31 @@ public class NewsServiceImpl implements NewsService {
     }
     
     private void clearAllListCache() {
-        var listKeys = redisTemplate.keys(NEWS_LIST_CACHE_PREFIX + "*");
-        if (listKeys != null && !listKeys.isEmpty()) {
-            redisTemplate.delete(listKeys);
+        // 使用 SCAN 替代 KEYS 命令，避免 Redis 阻塞（KEYS 会遍历所有 key 导致性能问题）
+        deleteKeysByPattern(NEWS_LIST_CACHE_PREFIX + "*");
+        deleteKeysByPattern(NEWS_CATEGORY_CACHE_PREFIX + "*");
+    }
+
+    /**
+     * 使用 SCAN 命令按模式匹配删除 Redis key，替代危险的 KEYS 命令
+     * SCAN 使用游标迭代，不会阻塞 Redis 服务器
+     */
+    private void deleteKeysByPattern(String pattern) {
+        List<String> keysToDelete = new ArrayList<>();
+        ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
+        try (var cursor = redisTemplate.scan(options)) {
+            while (cursor.hasNext()) {
+                keysToDelete.add(cursor.next());
+                // 每积累 500 个 key 批量删除一次，避免单次删除过多
+                if (keysToDelete.size() >= 500) {
+                    redisTemplate.delete(keysToDelete);
+                    keysToDelete.clear();
+                }
+            }
         }
-        
-        var categoryKeys = redisTemplate.keys(NEWS_CATEGORY_CACHE_PREFIX + "*");
-        if (categoryKeys != null && !categoryKeys.isEmpty()) {
-            redisTemplate.delete(categoryKeys);
+        // 删除剩余的 key
+        if (!keysToDelete.isEmpty()) {
+            redisTemplate.delete(keysToDelete);
         }
     }
 }

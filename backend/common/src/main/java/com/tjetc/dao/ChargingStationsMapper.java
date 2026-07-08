@@ -53,4 +53,15 @@ public interface ChargingStationsMapper extends BaseMapper<ChargingStation> {
      * @param stationId 充电桩ID
      */
     void updateChargingStationStatusAndTime(@Param("stationId") Integer stationId);
+
+    /**
+     * 条件更新充电桩状态（CAS 乐观锁），仅当当前状态等于 expectedStatus 时才更新为 newStatus
+     * @param stationId 充电桩ID
+     * @param newStatus 期望设置的新状态
+     * @param expectedStatus 期望的当前状态（仅当数据库中状态与此值匹配时才执行更新）
+     * @return 受影响行数（0 表示状态已被其他用户抢先修改，1 表示更新成功）
+     */
+    int updateStatusIfAvailable(@Param("stationId") Integer stationId,
+                                @Param("newStatus") String newStatus,
+                                @Param("expectedStatus") String expectedStatus);
 }

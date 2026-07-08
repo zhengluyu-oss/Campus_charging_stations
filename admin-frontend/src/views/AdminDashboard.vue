@@ -187,14 +187,20 @@ function statusType(status: string): string {
 
 async function fetchDashboardData() {
   try {
-    // Fetch user count
-    const userRes: any = await request.post('/user/page', { pageNum: 1, pageSize: 1 })
+    // 并行发起所有请求，减少总等待时间
+    const [userRes, stationRes, orderRes, allOrderRes]: any[] = await Promise.all([
+      request.post('/user/page', { pageNum: 1, pageSize: 1 }),
+      request.post('/chargingStation/page', { pageNum: 1, pageSize: 100 }),
+      request.post('/order/page/payment-status', { pageNum: 1, pageSize: 5, paymentStatus: '' }),
+      request.post('/order/page/payment-status', { pageNum: 1, pageSize: 100, paymentStatus: 'paid' }),
+    ])
+
+    // 处理用户数
     if (userRes?.data?.total !== undefined) {
       stats[0].value = String(userRes.data.total)
     }
 
-    // Fetch stations
-    const stationRes: any = await request.post('/chargingStation/page', { pageNum: 1, pageSize: 100 })
+    // 处理充电站数据
     if (stationRes?.data?.records) {
       stations.value = stationRes.data.records
       stationStats.total = stationRes.data.total || stationRes.data.records.length
@@ -209,18 +215,15 @@ async function fetchDashboardData() {
       stats[1].value = String(stationStats.available)
     }
 
-    // Fetch recent orders
-    const orderRes: any = await request.post('/order/page/payment-status', { pageNum: 1, pageSize: 5, paymentStatus: '' })
+    // 处理近期订单
     if (orderRes?.data?.records) {
       recentOrders.value = orderRes.data.records
-      // Today's orders count
       const today = new Date().toISOString().split('T')[0]
       const todayOrders = orderRes.data.records.filter((o: Order) => o.createdTime?.startsWith(today))
       stats[2].value = String(todayOrders.length)
     }
 
-    // Calculate revenue from orders
-    const allOrderRes: any = await request.post('/order/page/payment-status', { pageNum: 1, pageSize: 100, paymentStatus: 'paid' })
+    // 计算收入
     if (allOrderRes?.data?.records) {
       const totalRevenue = allOrderRes.data.records.reduce((sum: number, o: Order) => sum + (o.totalAmount || 0), 0)
       stats[3].value = `¥${totalRevenue.toFixed(2)}`

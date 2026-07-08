@@ -30,6 +30,11 @@ public interface ReservationMapper {
     List<Reservation> selectByTimeRangeAndStationId(@Param("stationId") Integer stationId, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
     /**
+     * 查询用户当前有效的预约（状态为 confirmed 或 used，且结束时间未过期）
+     */
+    List<Reservation> selectActiveByUserId(@Param("userId") Integer userId);
+
+    /**
      * 5. 更新预约状态
      */
     int updateStatusById(@Param("reservationId") Integer reservationId, @Param("status") String status);

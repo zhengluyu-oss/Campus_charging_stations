@@ -90,7 +90,6 @@ service.interceptors.request.use(
         return config
     },
     error => {
-        console.log('err' + error) // for debug
         ElMessage.error(error.message)
         //此时的promise链停下来了
         return Promise.reject('请求拦截器错误')
@@ -117,7 +116,6 @@ service.interceptors.response.use(
 
         // if the custom code is not 20000, it is judged as an error.
         if (res.state > 0) {
-            console.log(res.message)
             ElMessage.error(res.message || "系统出错");
             return Promise.reject(res.message)
         } else if (res.state === -1 && !isLoginRequest) { // 未登录或者登录过期，但排除登录请求本身
@@ -146,7 +144,6 @@ service.interceptors.response.use(
         }
     },
     error => {
-        console.log('err' + error) // for debug
         // 检查是否是网络错误或服务器错误
         if (error.response) {
             // 服务器返回了错误状态码

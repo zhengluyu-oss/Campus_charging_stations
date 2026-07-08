@@ -1,7 +1,7 @@
 export interface User {
     id: number
     username: string
-    password: string
+    // password 字段已移除 - 安全改进：前端不应存储用户密码
     avatarPath: string
     email: string,
     telephone: string,

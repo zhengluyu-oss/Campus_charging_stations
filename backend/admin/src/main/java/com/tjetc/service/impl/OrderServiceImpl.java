@@ -27,11 +27,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public JsonResult<List<Orders>> findAll() {
         try {
+            // 添加默认分页保护，避免全表数据量过大时 OOM
+            com.github.pagehelper.PageHelper.startPage(1, 1000);
             List<Orders> orderList = orderMapper.selectList(null);
             return JsonResult.success("查询所有订单成功", orderList);
         } catch (Exception e) {
             log.error("查询所有订单失败", e);
-            return JsonResult.fail("查询所有订单失败：" + e.getMessage());
+            return JsonResult.fail("查询所有订单失败，请稍后重试");
         }
     }
 
@@ -54,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
             return insertCount > 0 ? JsonResult.success("新增订单成功", order) : JsonResult.fail("新增订单失败");
         } catch (Exception e) {
             log.error("新增订单异常", e);
-            return JsonResult.fail("新增订单失败：" + e.getMessage());
+            return JsonResult.fail("新增订单失败，请稍后重试");
         }
     }
 
@@ -73,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
             return JsonResult.success("按支付状态分页查询成功", orderPage);
         } catch (Exception e) {
             log.error("按支付状态分页查询异常", e);
-            return JsonResult.fail("按支付状态分页查询失败：" + e.getMessage());
+            return JsonResult.fail("按支付状态分页查询失败，请稍后重试");
         }
     }
 
@@ -92,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
             return JsonResult.success("按用户ID分页查询成功", orderPage);
         } catch (Exception e) {
             log.error("按用户ID分页查询异常", e);
-            return JsonResult.fail("按用户ID分页查询失败：" + e.getMessage());
+            return JsonResult.fail("按用户ID分页查询失败，请稍后重试");
         }
     }
 
@@ -111,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
             return JsonResult.success("按充电桩ID分页查询成功", orderPage);
         } catch (Exception e) {
             log.error("按充电桩ID分页查询异常", e);
-            return JsonResult.fail("按充电桩ID分页查询失败：" + e.getMessage());
+            return JsonResult.fail("按充电桩ID分页查询失败，请稍后重试");
         }
     }
 
@@ -134,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
             ));
         } catch (Exception e) {
             log.error("时间范围订单统计异常", e);
-            return JsonResult.fail("时间范围订单统计失败：" + e.getMessage());
+            return JsonResult.fail("时间范围订单统计失败，请稍后重试");
         }
     }
 
@@ -152,7 +154,7 @@ public class OrderServiceImpl implements OrderService {
             return JsonResult.success("查询订单成功", order);
         } catch (Exception e) {
             log.error("按ID查询订单异常", e);
-            return JsonResult.fail("按ID查询订单失败：" + e.getMessage());
+            return JsonResult.fail("按ID查询订单失败，请稍后重试");
         }
     }
 
@@ -172,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
             return deleteCount > 0 ? JsonResult.success("删除订单成功") : JsonResult.fail("删除订单失败");
         } catch (Exception e) {
             log.error("删除订单异常", e);
-            return JsonResult.fail("删除订单失败：" + e.getMessage());
+            return JsonResult.fail("删除订单失败，请稍后重试");
         }
     }
 }

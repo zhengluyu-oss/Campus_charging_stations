@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tjetc.dao.PaymentsMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.tjetc.entity.core.Payments">
+        <id column="payment_id" property="paymentId" />
+        <result column="order_id" property="orderId" />
+        <result column="amount" property="amount" />
+        <result column="payments_method" property="paymentMethod" />
+        <result column="payments_status" property="paymentStatus" />
+        <result column="paid_time" property="paidTime" />
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        payment_id, order_id, amount, payments_method, payments_status, paid_time
+    </sql>
+
+    <!-- 按订单ID查询支付记录 -->
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payments
+        WHERE order_id = #{orderId}
+    </select>
+
+    <!-- 按支付状态分页查询 -->
+    <select id="selectPageByPaymentStatus" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payments
+        WHERE payments_status = #{paymentStatus}
+        ORDER BY payment_id DESC
+    </select>
+
+    <!-- 按支付方式分页查询 -->
+    <select id="selectPageByPaymentMethod" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payments
+        WHERE payments_method = #{paymentMethod}
+        ORDER BY payment_id DESC
+    </select>
+
+    <!-- 更新支付状态和支付时间 -->
+    <update id="updatePaymentStatusAndTime">
+        UPDATE payments
+        SET payments_status = #{paymentStatus},
+            paid_time = #{paidTime}
+        WHERE payment_id = #{paymentId}
+    </update>
+
+    <!-- 查询所有支付记录 -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payments
+    </select>
+
+    <!-- 插入支付记录 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="paymentId">
+        INSERT INTO payments (order_id, amount, payments_method, payments_status, paid_time)
+        VALUES (#{orderId}, #{amount}, #{paymentMethod}, #{paymentStatus}, #{paidTime})
+    </insert>
+
+    <!-- 按ID查询支付记录 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payments
+        WHERE payment_id = #{id}
+    </select>
+
+    <!-- 按ID删除支付记录 -->
+    <delete id="deleteById">
+        DELETE FROM payments
+        WHERE payment_id = #{id}
+    </delete>
+
+</mapper>

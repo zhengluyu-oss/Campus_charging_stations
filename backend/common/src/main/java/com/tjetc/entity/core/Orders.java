@@ -23,6 +23,8 @@ public class Orders {
     private Double totalAmount;
     @TableField(value = "payment_status")
     private String paymentStatus;
+    @TableField(value = "order_status")
+    private String orderStatus = "pending";
     @TableField(value = "created_time")
     private String createdTime;
 }

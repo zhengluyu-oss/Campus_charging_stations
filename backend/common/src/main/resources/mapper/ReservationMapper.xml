@@ -46,6 +46,16 @@
         AND reserved_end_time &gt; #{startTime}
     </select>
 
+    <!-- 查询用户当前有效的预约：状态为 confirmed 或 used，且预约结束时间未过期 -->
+    <select id="selectActiveByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM reservations
+        WHERE user_id = #{userId}
+          AND status IN ('confirmed', 'used')
+          AND reserved_end_time > NOW()
+        ORDER BY reserved_start_time ASC
+    </select>
+
     <update id="updateStatusById">
         UPDATE reservations
         SET status = #{status}

@@ -9,7 +9,6 @@ import com.tjetc.entity.core.Reservation;
 import com.tjetc.service.service.coreFunction.ChargeMonitorService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,20 +28,10 @@ public class ChargeMonitorServiceImpl implements ChargeMonitorService {
     public Map<String, Object> getUserCurrentChargeStatus(Integer userId) {
         Map<String, Object> result = new HashMap<>();
 
-        // 查找用户当前有效的预约（状态为已确认或正在使用）
-        // 使用分页查询获取用户的所有预约
-        com.baomidou.mybatisplus.extension.plugins.pagination.Page<Reservation> page =
-            new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(1, 100);
-        List<Reservation> userReservations = reservationMapper.selectPageByUserId(page, userId).getRecords();
+        // 直接在 SQL 层过滤有效预约（状态 + 时间），避免加载全部记录到内存
+        List<Reservation> activeReservations = reservationMapper.selectActiveByUserId(userId);
 
-        Reservation currentReservation = null;
-        for (Reservation res : userReservations) {
-            if (("confirmed".equals(res.getStatus()) || "used".equals(res.getStatus())) &&
-                res.getReservedEndTime().isAfter(LocalDateTime.now())) {
-                currentReservation = res;
-                break; // 找到第一个符合条件的预约即可
-            }
-        }
+        Reservation currentReservation = activeReservations.isEmpty() ? null : activeReservations.get(0);
 
         if (currentReservation != null) {
             result.put("isCharging", true);
@@ -67,23 +56,16 @@ public class ChargeMonitorServiceImpl implements ChargeMonitorService {
 
     @Override
     public Reservation getCurrentReservation(Integer userId) {
-        // 使用分页查询获取用户的所有预约
-        com.baomidou.mybatisplus.extension.plugins.pagination.Page<Reservation> page =
-            new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(1, 100);
-        List<Reservation> userReservations = reservationMapper.selectPageByUserId(page, userId).getRecords();
+        // 直接在 SQL 层过滤有效预约（状态为 confirmed + 时间未过期），按开始时间升序返回
+        List<Reservation> activeReservations = reservationMapper.selectActiveByUserId(userId);
 
-        Reservation currentReservation = null;
-        for (Reservation res : userReservations) {
-            if ("confirmed".equals(res.getStatus()) && // 当前有效的预约
-                res.getReservedEndTime().isAfter(LocalDateTime.now())) {
-                if (currentReservation == null ||
-                    res.getReservedStartTime().isBefore(currentReservation.getReservedStartTime())) {
-                    currentReservation = res; // 找到最早的那个有效预约
-                }
+        // 只取状态为 confirmed 的（排除 used），取最早的那条
+        for (Reservation res : activeReservations) {
+            if ("confirmed".equals(res.getStatus())) {
+                return res;
             }
         }
-
-        return currentReservation;
+        return null;
     }
 
     @Override

@@ -1,6 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
+// 安全风险提示：
+// 1. token 存储在 localStorage 中，存在 XSS 攻击风险
+// 2. 建议使用 httpOnly cookie 存储 token，或实现 token 刷新机制
+// 3. persist: true 配置会将敏感信息持久化到本地存储
+// 4. 生产环境应考虑使用更安全的存储方案
+
 export interface AdminInfo {
   id: number
   username: string

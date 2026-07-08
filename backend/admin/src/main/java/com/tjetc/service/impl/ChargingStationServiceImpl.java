@@ -29,10 +29,11 @@ public class ChargingStationServiceImpl implements ChargingStationService {
     /**
      * 【核心修改点 1】实现 selectAll
      * 替换掉 chargingStationsMapper.selectAll()，改用 MP 内置的 selectList(null)
+     * 添加默认分页保护，避免全表数据量过大时 OOM
      */
     @Override
     public List<ChargingStation> selectAll() {
-        // null 表示无条件查询，即查询所有
+        PageHelper.startPage(1, 1000);
         return chargingStationsMapper.selectList(null);
     }
 
