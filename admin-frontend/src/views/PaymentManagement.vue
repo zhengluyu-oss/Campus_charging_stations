@@ -147,7 +147,7 @@ const paidCount = computed(() => payments.value.filter(p => p.paymentStatus === 
 const pendingCount = computed(() => payments.value.filter(p => p.paymentStatus === 'pending').length)
 const totalAmount = computed(() => payments.value.reduce((sum, p) => sum + (p.amount || 0), 0))
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   return {
     width: `${Math.random() * 3 + 1}px`,
     height: `${Math.random() * 3 + 1}px`,

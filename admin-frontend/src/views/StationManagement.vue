@@ -181,7 +181,7 @@ const dialogRules: FormRules = {
   status: [{ required: true, message: 'Status is required', trigger: 'change' }],
 }
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   return {
     width: `${Math.random() * 3 + 1}px`,
     height: `${Math.random() * 3 + 1}px`,

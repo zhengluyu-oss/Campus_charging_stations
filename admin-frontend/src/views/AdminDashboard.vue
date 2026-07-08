@@ -157,7 +157,7 @@ const stationLegend = reactive([
   { label: 'Offline', count: 0, color: '#f5576c' },
 ])
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   const size = Math.random() * 3 + 1
   return {
     width: `${size}px`,
@@ -204,9 +204,9 @@ async function fetchDashboardData() {
     if (stationRes?.data?.records) {
       stations.value = stationRes.data.records
       stationStats.total = stationRes.data.total || stationRes.data.records.length
-      stationStats.available = stationRes.data.records.filter((s: Station) => s.status === 'available' || s.status === '0').length
-      stationStats.occupied = stationRes.data.records.filter((s: Station) => s.status === 'occupied' || s.status === '1').length
-      stationStats.offline = stationRes.data.records.filter((s: Station) => s.status === 'offline' || s.status === '2').length
+      stationStats.available = stationRes.data.records.filter((s: Station) => s.status === 'available').length
+      stationStats.occupied = stationRes.data.records.filter((s: Station) => s.status === 'occupied').length
+      stationStats.offline = stationRes.data.records.filter((s: Station) => s.status === 'maintenance').length
 
       stationLegend[0].count = stationStats.available
       stationLegend[1].count = stationStats.occupied

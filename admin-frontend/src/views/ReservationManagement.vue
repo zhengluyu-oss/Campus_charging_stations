@@ -131,7 +131,7 @@ const pageNum = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   return {
     width: `${Math.random() * 3 + 1}px`,
     height: `${Math.random() * 3 + 1}px`,
