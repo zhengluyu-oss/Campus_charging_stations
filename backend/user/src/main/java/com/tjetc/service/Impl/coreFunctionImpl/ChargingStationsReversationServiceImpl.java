@@ -47,7 +47,7 @@ public class ChargingStationsReversationServiceImpl implements ChargingStationsR
         if (station == null) {
             return JsonResult.fail("充电桩不存在");
         }
-        if ("1".equals(station.getStatus())) {
+        if ("occupied".equals(station.getStatus())) {
             return JsonResult.fail("充电桩正在使用中，无法预约");
         }
 
@@ -66,7 +66,7 @@ public class ChargingStationsReversationServiceImpl implements ChargingStationsR
         reservationMapper.insert(reservation);
         logger.info("预约记录创建成功，预约ID: {}", reservation.getReservationId());
 
-        chargingStationsMapper.updateChargingStationStatusAndTime(stationId);
+        chargingStationsMapper.updateStatus(stationId, "occupied");
         logger.info("用户{}预约充电桩{}，{}分钟后开始充电，充电时长{}分钟", userId, stationId, delayMinutes, chargingDuration);
 
         chargingAsyncService.startReserveTimer(userId, stationId, delayMinutes, chargingDuration, station.getPricePerHour());
@@ -76,8 +76,8 @@ public class ChargingStationsReversationServiceImpl implements ChargingStationsR
 
     @Override
     public JsonResult getUserReservations(String userId) {
+        Integer userIdInt = null;
         try {
-            Integer userIdInt;
             if (userId == null || userId.isBlank()) {
                 userIdInt = AuthUtils.resolveUserId(null);
             } else {

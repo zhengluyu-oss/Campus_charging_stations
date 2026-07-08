@@ -36,9 +36,9 @@ public class ChargingStationUseServiceImpl implements ChargingStationUseService 
             return JsonResult.fail("充电桩不存在");
         }
 
-        // 使用 CAS 条件更新：仅当状态为"0"（空闲）时才更新为"1"（使用中）
+        // 使用 CAS 条件更新：仅当状态为"available"（空闲）时才更新为"occupied"（使用中）
         // 返回受影响行数，0 表示充电桩已被其他用户抢先使用
-        int affectedRows = chargingStationsMapper.updateStatusIfAvailable(stationId, "1", "0");
+        int affectedRows = chargingStationsMapper.updateStatusIfAvailable(stationId, "occupied", "available");
         if (affectedRows == 0) {
             return JsonResult.fail("充电桩正在使用中或状态已变更，请刷新后重试");
         }
