@@ -122,7 +122,7 @@
 
     <!-- View dialog -->
     <el-dialog v-model="viewDialogVisible" title="User Details" width="450px" class="dark-dialog">
-      <div class="user-detail" v-if="viewUser">
+      <div class="user-detail" v-if="viewData.id">
         <div class="detail-row"><span class="detail-label">ID:</span><span>{{ viewData.id }}</span></div>
         <div class="detail-row"><span class="detail-label">Username:</span><span>{{ viewData.username }}</span></div>
         <div class="detail-row"><span class="detail-label">Phone:</span><span>{{ viewData.phone || '--' }}</span></div>
@@ -187,7 +187,7 @@ const viewData = reactive<User>({
   id: 0, username: '', phone: '', email: '', userType: '', avatarPath: '', createdTime: '', updatedTime: '',
 })
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   return {
     width: `${Math.random() * 3 + 1}px`,
     height: `${Math.random() * 3 + 1}px`,

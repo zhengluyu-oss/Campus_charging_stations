@@ -11,11 +11,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-three': ['three'],
-          'vendor-element-plus': ['element-plus', '@element-plus/icons-vue'],
-          'vendor-axios': ['axios'],
-          'vendor-vue': ['vue', 'vue-router', 'pinia'],
+        manualChunks(id: string) {
+          if (id.includes('node_modules/three')) return 'vendor-three'
+          if (id.includes('node_modules/element-plus') || id.includes('@element-plus/icons-vue')) return 'vendor-element-plus'
+          if (id.includes('node_modules/axios')) return 'vendor-axios'
+          if (id.includes('node_modules/vue') || id.includes('node_modules/vue-router') || id.includes('node_modules/pinia')) return 'vendor-vue'
         },
       },
     },

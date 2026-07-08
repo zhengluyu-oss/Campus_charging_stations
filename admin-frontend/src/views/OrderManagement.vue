@@ -151,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
 
@@ -179,7 +179,7 @@ const total = ref(0)
 const detailVisible = ref(false)
 const detailData = ref<Order | null>(null)
 
-function particleStyle(n: number) {
+function particleStyle(_n: number) {
   return {
     width: `${Math.random() * 3 + 1}px`,
     height: `${Math.random() * 3 + 1}px`,
