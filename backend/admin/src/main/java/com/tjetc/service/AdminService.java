@@ -40,6 +40,14 @@ public interface AdminService  {
     JsonResult login(AdminLoginDTO adminLoginDTO);
 
     /**
+     * 刷新 Token
+     *
+     * @param refreshToken Refresh Token
+     * @return 新的 Token 对
+     */
+    JsonResult refreshToken(String refreshToken);
+
+    /**
      * 根据用户名模糊分页查询用户信息
      *
      * @param pageNum   页面

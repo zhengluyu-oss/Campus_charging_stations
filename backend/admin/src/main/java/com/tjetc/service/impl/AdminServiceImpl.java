@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -137,21 +137,39 @@ public class AdminServiceImpl implements AdminService {
         return JsonResult.success("");
     }
 
+    /**
+     * 生成登录成功响应（包含 access token + refresh token + 管理员信息）
+     */
+    private JsonResult buildLoginResult(Admin admin) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", admin.getId());
+        claims.put("username", admin.getUsername());
+
+        String accessToken = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
+        String refreshToken = JwtTokenUtil.generateRefreshToken(String.valueOf(admin.getId()));
+
+        // 密码脱敏
+        admin.setPassword(null);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("token", accessToken);
+        result.put("refreshToken", refreshToken);
+        result.put("admin", admin);
+        return JsonResult.success(result);
+    }
+
     @Override
     public JsonResult login(String username, String password) {
-        //校验数据
         JsonResult jsonResult = checkUsernameAndPassword(username, password);
         if (jsonResult.getState() != 0) {
             return jsonResult;
         }
-        //根据用户名查询用户
         Admin admin = adminMapper.selectByUsername(username);
         if (admin == null) {
             return JsonResult.fail("用户名或者密码不正确");
         }
         //验证密码
         if (!passwordEncoder.matches(password, admin.getPassword())) {
-            // 兼容明文密码：如果明文匹配，则自动加密迁移
             if (password.equals(admin.getPassword())) {
                 admin.setPassword(passwordEncoder.encode(password));
                 adminMapper.updateById(admin);
@@ -160,34 +178,23 @@ public class AdminServiceImpl implements AdminService {
                 return JsonResult.fail("用户名或者密码不正确");
             }
         }
-        //登录成功，生成token 并把token返回给前端
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("id", admin.getId());
-        claims.put("username", admin.getUsername());
-        String token = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
-        //密码设置为null，不能给前端，属于敏感信息
-        admin.setPassword(null);
-        //返回前端的message是token 同时还有admin对象信息（不包括密码）
-        return JsonResult.success(token, admin);
+        return buildLoginResult(admin);
     }
 
     @Override
     public JsonResult login(AdminLoginDTO adminLoginDTO) {
         String username = adminLoginDTO.getUsername();
         String password = adminLoginDTO.getPassword();
-        //校验数据
         JsonResult jsonResult = checkUsernameAndPassword(username, password);
         if (jsonResult.getState() != 0) {
             return jsonResult;
         }
-        //根据用户名查询用户
         Admin admin = adminMapper.selectByUsername(username);
         if (admin == null) {
             return JsonResult.fail("用户名或者密码不正确");
         }
         //验证密码
         if (!passwordEncoder.matches(password, admin.getPassword())) {
-            // 兼容明文密码：如果明文匹配，则自动加密迁移
             if (password.equals(admin.getPassword())) {
                 admin.setPassword(passwordEncoder.encode(password));
                 adminMapper.updateById(admin);
@@ -196,15 +203,34 @@ public class AdminServiceImpl implements AdminService {
                 return JsonResult.fail("用户名或者密码不正确");
             }
         }
-        //登录成功，生成token 并把token返回给前端
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("id", admin.getId());
-        claims.put("username", admin.getUsername());
-        String token = JwtTokenUtil.generateToken(claims, "admin", tokenExpired);
-        //密码设置为null，不能给前端，属于敏感信息
-        admin.setPassword(null);
-        //返回前端的message是token 同时还有admin对象信息（不包括密码）
-        return JsonResult.success(token, admin);
+        return buildLoginResult(admin);
+    }
+
+    @Override
+    public JsonResult refreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return JsonResult.fail("Refresh Token 不能为空");
+        }
+        // 校验 Refresh Token
+        io.jsonwebtoken.Claims claims = JwtTokenUtil.validateToken(refreshToken);
+        if (claims == null) {
+            return JsonResult.fail(-1, "Refresh Token 已过期或无效");
+        }
+        if (!JwtTokenUtil.isRefreshToken(claims)) {
+            return JsonResult.fail("Token 类型不正确");
+        }
+        // 提取用户信息
+        Integer adminId;
+        try {
+            adminId = Integer.valueOf(claims.getSubject());
+        } catch (NumberFormatException e) {
+            return JsonResult.fail("Token 无效");
+        }
+        Admin admin = adminMapper.selectById(adminId);
+        if (admin == null) {
+            return JsonResult.fail("用户不存在");
+        }
+        return buildLoginResult(admin);
     }
 
     @Override

@@ -20,6 +20,7 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
                 //排除掉哪些url不用登录就能直接访问
                 .excludePathPatterns(
                         "/admin/login",
+                        "/admin/refresh",
                         "/image/**",
                         "/video/**",
                         "/**/*.js",

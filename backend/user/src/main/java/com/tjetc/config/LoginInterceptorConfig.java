@@ -21,6 +21,7 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/user/login",
+                        "/user/refresh",
                         "/user/register",
                         "/error",
                         "/image/**",
