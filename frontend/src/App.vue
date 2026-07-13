@@ -3,7 +3,7 @@ import {useRouter, useRoute} from 'vue-router'
 import { ref, watch } from 'vue'
 import Header from './components/UserHeader.vue'
 import Footer from './components/Footer.vue'
-import HandParticleCanvas from './components/HandParticleCanvas.vue'
+import AmbientParticles from './components/AmbientParticles.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -33,7 +33,7 @@ watch(
 
 <template>
   <div class="layout">
-    <HandParticleCanvas />
+    <AmbientParticles />
     <el-container class="container">
       <Header v-if="showNav"/>
       <div class="main" :class="{ 'no-nav': !showNav }">
@@ -44,10 +44,25 @@ watch(
   </div>
 </template>
 
+<style>
+:root {
+  --bg-primary: #1a2a3a;
+  --bg-secondary: #1e3040;
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --brand-primary: #00b4d8;
+  --brand-secondary: #52b788;
+  --brand-accent: #0077b6;
+  --text-primary: #e8edf2;
+  --text-secondary: #8fa3b0;
+  --text-muted: #5a7280;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(0, 180, 216, 0.3);
+}
+</style>
 <style scoped>
 .layout {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: var(--bg-primary);
   color: #ffffff;
 }
 
