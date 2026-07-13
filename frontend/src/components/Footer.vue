@@ -59,7 +59,6 @@
 }
 
 .footer a:hover {
-  color: #00c9ff;
-  text-shadow: 0 0 8px rgba(0, 201, 255, 0.4);
+  color: var(--brand-primary);
 }
 </style>

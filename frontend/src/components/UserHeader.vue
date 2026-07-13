@@ -89,7 +89,6 @@ const goToDashboard = () => {
 
 .logo-icon {
   font-size: 24px;
-  filter: drop-shadow(0 0 8px rgba(0, 201, 255, 0.6));
 }
 
 .header .left .back {
@@ -105,9 +104,8 @@ const goToDashboard = () => {
 
 .header .left .back:hover {
   background: rgba(0, 201, 255, 0.2);
-  border-color: #00c9ff;
-  color: #00c9ff;
-  transform: translateX(-2px);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
 }
 
 .header .right {
@@ -129,7 +127,7 @@ const goToDashboard = () => {
 }
 
 .el-dropdown-link:hover {
-  color: #00c9ff;
+  color: var(--brand-primary);
   background: rgba(0, 201, 255, 0.1);
   border-color: rgba(0, 201, 255, 0.3);
 }
