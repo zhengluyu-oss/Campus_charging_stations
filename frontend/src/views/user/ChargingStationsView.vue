@@ -329,7 +329,7 @@ const handlePageChange = (page: number) => {
 <style scoped>
 .charging-stations-page {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background: var(--bg-primary);
   margin: 0;
   padding: 0;
   padding-bottom: 20px;
@@ -338,18 +338,20 @@ const handlePageChange = (page: number) => {
 .page-header {
   margin-bottom: 20px;
   padding: 15px 20px;
-  background: #fff;
-  border-bottom: 1px solid #e4e7ed;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .page-header h1 {
   margin: 0 0 10px 0;
-  color: #303133;
+  color: var(--text-primary);
   font-size: 20px;
   font-weight: 500;
 }
 
 .filter-card {
+  --el-card-bg-color: var(--bg-card);
+  --el-card-border-color: var(--border-color);
   margin: 0 20px 20px;
   border-radius: 4px;
 }
@@ -367,7 +369,7 @@ const handlePageChange = (page: number) => {
 .filter-group label {
   margin-bottom: 5px;
   font-weight: 500;
-  color: #606266;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
@@ -386,6 +388,8 @@ const handlePageChange = (page: number) => {
 }
 
 .list-card {
+  --el-card-bg-color: var(--bg-card);
+  --el-card-border-color: var(--border-color);
   border-radius: 4px;
 }
 
@@ -393,7 +397,7 @@ const handlePageChange = (page: number) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #303133;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -409,9 +413,9 @@ const handlePageChange = (page: number) => {
 
 .station-item {
   padding: 15px;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 4px;
-  border: 1px solid #e4e7ed;
+  border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 10px;
@@ -420,7 +424,7 @@ const handlePageChange = (page: number) => {
 
 .station-item:hover {
   border-left-color: #409EFF;
-  background: #fafafa;
+  background: var(--bg-secondary);
 }
 
 .station-header {
@@ -435,7 +439,7 @@ const handlePageChange = (page: number) => {
 
 .station-name-section h3 {
   margin: 0 0 8px 0;
-  color: #303133;
+  color: var(--text-primary);
   font-size: 16px;
   font-weight: 500;
 }
@@ -454,6 +458,23 @@ const handlePageChange = (page: number) => {
 .pagination-section {
   padding: 15px 0 0;
   text-align: center;
+}
+
+/* Element Plus 分页组件深色主题适配 */
+.pagination-section :deep(.el-pagination button),
+.pagination-section :deep(.el-pager li) {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.pagination-section :deep(.el-pagination .el-input__wrapper) {
+  background: var(--bg-card);
+  box-shadow: 0 0 0 1px var(--border-color) inset;
+}
+
+.pagination-section :deep(.el-pagination button.is-disabled) {
+  background: var(--bg-card);
+  color: var(--text-muted);
 }
 
 /* 响应式设计 */
