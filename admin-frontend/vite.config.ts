@@ -12,7 +12,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('node_modules/three')) return 'vendor-three'
           if (id.includes('node_modules/element-plus') || id.includes('@element-plus/icons-vue')) return 'vendor-element-plus'
           if (id.includes('node_modules/axios')) return 'vendor-axios'
           if (id.includes('node_modules/vue') || id.includes('node_modules/vue-router') || id.includes('node_modules/pinia')) return 'vendor-vue'

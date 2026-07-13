@@ -13,7 +13,6 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    'vendor-three': ['three'],
                     'vendor-element-plus': ['element-plus', '@element-plus/icons-vue'],
                     'vendor-axios': ['axios'],
                     'vendor-vue': ['vue', 'vue-router', 'pinia'],
