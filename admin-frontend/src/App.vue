@@ -1,5 +1,5 @@
 <template>
-  <HandParticleCanvas @hand-detected="onHandDetected" @hand-lost="onHandLost" />
+  <AmbientParticles />
   <div v-if="route.path === '/login'" class="login-wrapper">
     <router-view />
   </div>
@@ -83,7 +83,7 @@
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
-import HandParticleCanvas from '@/components/HandParticleCanvas.vue'
+import AmbientParticles from '@/components/AmbientParticles.vue'
 
 const route = useRoute()
 const adminStore = useAdminStore()
@@ -92,14 +92,24 @@ onMounted(() => {
   document.documentElement.classList.add('dark')
 })
 
-function onHandDetected(_position: { x: number; y: number }) {
-  // Future: integrate hand position with UI interactions
-}
-
-function onHandLost() {
-  // Future: clean up hand-related UI state
-}
 </script>
+
+
+<style>
+:root {
+  --bg-primary: #1a2a3a;
+  --bg-secondary: #1e3040;
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --brand-primary: #00b4d8;
+  --brand-secondary: #52b788;
+  --brand-accent: #0077b6;
+  --text-primary: #e8edf2;
+  --text-secondary: #8fa3b0;
+  --text-muted: #5a7280;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(0, 180, 216, 0.3);
+}
+</style>
 
 <style scoped>
 .login-wrapper {
@@ -115,7 +125,7 @@ function onHandLost() {
   height: 100vh;
   position: relative;
   z-index: 1;
-  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  background: var(--bg-primary);
 }
 
 .sidebar {
