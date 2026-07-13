@@ -215,10 +215,7 @@ html, body {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 10px;
-  background: linear-gradient(45deg, #00c9ff, #92fe9d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
 }
 
 .card-header p {
@@ -277,15 +274,15 @@ html, body {
   font-size: 16px;
   font-weight: 500;
   border-radius: 8px;
-  background: linear-gradient(45deg, #00c9ff, #92fe9d);
+  background: var(--brand-primary);
   border: none;
-  color: #0f2027;
+  color: #ffffff;
   transition: all 0.3s ease;
 }
 
 .login-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 201, 255, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 180, 216, 0.3);
 }
 
 .login-footer {
@@ -334,7 +331,7 @@ html, body {
 :deep(.el-input__wrapper.is-focus) {
   background: rgba(255, 255, 255, 0.15) !important;
   border: 1px solid rgba(0, 201, 255, 0.5) !important;
-  box-shadow: 0 0 0 2px rgba(0, 201, 255, 0.2) !important;
+  box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.15) !important;
 }
 
 :deep(.el-input__prefix-inner .el-icon) {
