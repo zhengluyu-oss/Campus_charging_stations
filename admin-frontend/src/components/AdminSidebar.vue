@@ -1,7 +1,7 @@
 <template>
   <aside class="admin-sidebar" :class="{ collapsed: adminStore.sidebarCollapsed }">
     <div class="sidebar-header">
-      <el-icon :size="26" color="#00c9ff"><Lightning /></el-icon>
+      <el-icon :size="26" color="var(--brand-primary)"><Lightning /></el-icon>
       <transition name="fade">
         <span v-show="!adminStore.sidebarCollapsed" class="sidebar-title">Charging Admin</span>
       </transition>
@@ -13,7 +13,7 @@
       router
       background-color="transparent"
       text-color="rgba(255,255,255,0.6)"
-      active-text-color="#00c9ff"
+      active-text-color="var(--brand-primary)"
       class="sidebar-menu"
     >
       <el-menu-item index="/dashboard">
@@ -109,10 +109,7 @@ const adminStore = useAdminStore()
   color: #ffffff;
   white-space: nowrap;
   letter-spacing: 0.5px;
-  background: linear-gradient(45deg, #00c9ff, #92fe9d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  /* 渐变文字已移除 */
 }
 
 .sidebar-menu {
@@ -153,7 +150,7 @@ const adminStore = useAdminStore()
   transform: translateY(-50%);
   width: 3px;
   height: 20px;
-  background: linear-gradient(180deg, #00c9ff, #92fe9d);
+  background: var(--brand-primary);
   border-radius: 0 3px 3px 0;
 }
 
