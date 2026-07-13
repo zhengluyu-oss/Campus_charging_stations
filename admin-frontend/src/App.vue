@@ -6,7 +6,7 @@
   <div v-else class="admin-layout">
     <aside class="sidebar" :class="{ collapsed: adminStore.sidebarCollapsed }">
       <div class="sidebar-header">
-        <el-icon :size="24" color="#00c9ff"><Lightning /></el-icon>
+        <el-icon :size="24" color="var(--brand-primary)"><Lightning /></el-icon>
         <span v-show="!adminStore.sidebarCollapsed" class="sidebar-title">Charging Admin</span>
       </div>
       <el-menu
