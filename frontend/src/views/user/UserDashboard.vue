@@ -21,7 +21,6 @@
 
       <div class="dashboard-cards">
         <div class="dashboard-card charging-service-card" @click="goToChargingStations">
-          <div class="card-glow"></div>
           <div class="service-content">
             <div class="service-icon">
               <el-icon><Lightning /></el-icon>
@@ -37,7 +36,6 @@
         </div>
 
         <div class="dashboard-card news-service-card" @click="goToNews('publish')">
-          <div class="card-glow"></div>
           <div class="service-content">
             <div class="service-icon">
               <el-icon><Document /></el-icon>
@@ -53,7 +51,6 @@
         </div>
 
         <div class="dashboard-card profile-service-card" @click="goToProfile">
-          <div class="card-glow"></div>
           <div class="service-content">
             <div class="service-icon">
               <el-icon><User /></el-icon>
@@ -95,7 +92,6 @@
 
       <div class="news-sections">
         <div class="dashboard-card news-section-card" @click="goToNews('view', 'event')">
-          <div class="card-glow"></div>
           <div class="service-content">
             <div class="service-icon">
               <el-icon><Calendar /></el-icon>
@@ -111,7 +107,6 @@
         </div>
 
         <div class="dashboard-card news-section-card" @click="goToNews('view', 'policy')">
-          <div class="card-glow"></div>
           <div class="service-content">
             <div class="service-icon">
               <el-icon><DocumentCopy /></el-icon>
@@ -127,7 +122,6 @@
         </div>
 
         <div class="dashboard-card news-section-card" @click="goToNews('view', 'lost')">
-          <div class="card-glow"></div>
           <div class="service-content">
             <div class="service-icon">
               <el-icon><Search /></el-icon>
@@ -344,26 +338,10 @@ const handleLogout = async () => {
   overflow: hidden;
 }
 
-.card-glow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0, 201, 255, 0.1) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
 .dashboard-card:hover {
   transform: translateY(-5px);
   border-color: rgba(0, 201, 255, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 201, 255, 0.2);
-}
-
-.dashboard-card:hover .card-glow {
-  opacity: 1;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .service-content {
@@ -389,7 +367,6 @@ const handleLogout = async () => {
 
 .dashboard-card:hover .service-icon {
   background: rgba(0, 201, 255, 0.2);
-  transform: scale(1.05);
 }
 
 .service-text {
@@ -417,7 +394,6 @@ const handleLogout = async () => {
 
 .dashboard-card:hover .card-arrow {
   color: #00c9ff;
-  transform: translateX(5px);
 }
 
 .quick-stats {
@@ -447,7 +423,7 @@ const handleLogout = async () => {
 
 .stat-icon {
   font-size: 32px;
-  color: #92fe9d;
+  color: var(--brand-primary);
 }
 
 .stat-text {
