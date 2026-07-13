@@ -423,7 +423,7 @@ const handlePageChange = (page: number) => {
 }
 
 .station-item:hover {
-  border-left-color: #409EFF;
+  border-left-color: var(--brand-primary);
   background: var(--bg-secondary);
 }
 
