@@ -76,6 +76,7 @@
                     <include>**/*.xml</include>
                     <include>**/*.properties</include>
                     <include>**/*.yml</include>
+                    <include>**/*.sql</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

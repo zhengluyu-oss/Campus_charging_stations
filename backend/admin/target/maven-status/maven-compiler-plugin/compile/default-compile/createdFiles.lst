@@ -16,7 +16,6 @@ com\tjetc\service\impl\NewsServiceImpl.class
 com\tjetc\AdminApplication.class
 com\tjetc\controller\news\NewsController.class
 com\tjetc\service\impl\AdminServiceImpl.class
-com\tjetc\common\FileUploadUtils.class
 com\tjetc\service\impl\OrderServiceImpl.class
 com\tjetc\service\impl\ReservationServiceImpl.class
 com\tjetc\service\impl\UserServiceImpl.class

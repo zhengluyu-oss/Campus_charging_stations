@@ -7,9 +7,16 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/campus_charging_station?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    username: root
-    password: 123456
+    url: jdbc:mysql://localhost:3306/campus_charging_station?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+  #数据库自动初始化
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: true
 
     #静态资源访问配置
   web:
@@ -20,21 +27,21 @@ spring:
         - classpath:/static/
         - classpath:/public/
         #配置读取项目外资源（注意：上传文件的位置要 读取的位置要一致 file.basePath）
-        - file:F:\guochuang\my_project_useful\the_first\文件存储
+        - file:${FILE_UPLOAD_PATH:F:\guochuang\my_project_useful\the_first\文件存储}
   data:
     redis:
-      host: 127.0.0.1
-      password: 123456
-      port: 6379
+      host: ${REDIS_HOST:127.0.0.1}
+      password: ${REDIS_PASSWORD}
+      port: ${REDIS_PORT:6379}
       database: 1
 
   #文件上传位置
   servlet:
     multipart:
       #配置上传文件最大值
-      max-file-size: 1024MB
+      max-file-size: 10MB
       #配置请求数据最大值
-      max-request-size: 2048MB
+      max-request-size: 50MB
 
 #springdoc配置
 springdoc:
@@ -71,13 +78,13 @@ mybatis-plus:
 
 #配置文件上传位置
 file:
-  basePath: D:/temp
+  basePath: ${FILE_BASE_PATH:D:/temp}
 # JWT: secret must be at least 32 characters in production (HS256)
 jwt:
-  secret: campus-charging-station-dev-secret-key-32bytes!
+  secret: ${JWT_SECRET}
   token:
-    expired: 36000000
+    expired: 1800000  # 30分钟（原36000000ms ≈ 10小时）
 #日志配置
 logging:
   file:
-    path: D:/temp/mylog.log  #日志文件存储路径（会在 D:/temp 下生成日志文件，记录项目运行日志）
+    path: ${LOG_PATH:D:/temp/mylog.log}  #日志文件存储路径

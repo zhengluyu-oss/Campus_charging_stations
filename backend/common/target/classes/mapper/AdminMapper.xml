@@ -55,4 +55,20 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 模糊查询管理员用户名 -->
+    <select id="selectLikeUsername" resultType="com.tjetc.entity.userAndAdmin.Admin">
+        SELECT
+            id,
+            username,
+            password,
+            avatar_path,
+            email,
+            telephone,
+            qq,
+            create_time,
+            update_time
+        FROM admin
+        WHERE username LIKE CONCAT('%', #{username}, '%')
+    </select>
+
 </mapper>

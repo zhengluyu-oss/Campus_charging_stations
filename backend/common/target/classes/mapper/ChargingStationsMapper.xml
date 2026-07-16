@@ -14,12 +14,13 @@
         <result column="updated_time" property="updatedTime" />
     </resultMap>
 
-    <!-- 保留你原有的按名称模糊查询（带非空判断、倒序排序，无需修改） -->
+    <!-- 按名称前缀查询（前缀匹配可利用索引，避免全表扫描） -->
+    <!-- 注意：如果业务需要中间匹配（%xxx%），需为 station_name 列添加全文索引 -->
     <select id="selectLikeName" resultMap="BaseResultMap">
         SELECT * FROM charging_stations
         <where>
             <if test="stationName != null and stationName != ''">
-                station_name LIKE concat('%', #{stationName}, '%')
+                station_name LIKE concat(#{stationName}, '%')
             </if>
         </where>
         ORDER BY created_time DESC
@@ -56,22 +57,19 @@
     </select>
 
 
-    <update id="updateChargingStationStatus">
-            update charging_stations
-            set status = 1
-            where station_id = #{stationId}
+    <!-- 通用更新充电桩状态（参数化） -->
+    <update id="updateStatus">
+        UPDATE charging_stations
+        SET status = #{status}
+        WHERE station_id = #{stationId}
     </update>
 
-    <update id="stopUpdateChargingStationStatus">
-        update charging_stations
-        set status = 0
-        where station_id = #{stationId}
-    </update>
-
-    <update id="updateChargingStationStatusAndTime">
-        update charging_stations
-        set status = 1
-        where station_id = #{stationId}
+    <!-- 条件更新充电桩状态（CAS 乐观锁），防止竞态条件 -->
+    <update id="updateStatusIfAvailable">
+        UPDATE charging_stations
+        SET status = #{newStatus}
+        WHERE station_id = #{stationId}
+          AND status = #{expectedStatus}
     </update>
 
 </mapper>

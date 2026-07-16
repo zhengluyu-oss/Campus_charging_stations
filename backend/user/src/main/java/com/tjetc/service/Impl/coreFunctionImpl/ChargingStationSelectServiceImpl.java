@@ -18,6 +18,9 @@ public class ChargingStationSelectServiceImpl implements ChargingStationSelectSe
     @Autowired
     private ChargingStationsMapper chargingStationsMapper;
 
+    @Autowired
+
+
 
 
 

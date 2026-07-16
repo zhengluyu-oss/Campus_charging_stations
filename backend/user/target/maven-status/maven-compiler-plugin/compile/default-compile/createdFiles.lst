@@ -34,6 +34,7 @@ com\tjetc\service\Impl\coreFunctionImpl\ChargingStationOrderSelect.class
 com\tjetc\controller\userFunctionController\LoginController.class
 com\tjetc\service\Impl\coreFunctionImpl\ChargingStationOrderServiceImpl.class
 com\tjetc\service\service\userFunction\UserLoginService.class
+com\tjetc\service\Impl\coreFunctionImpl\ChargingTimerScheduler.class
 com\tjetc\service\Impl\news\NewsServiceImpl.class
 com\tjetc\controller\userFunctionController\RegisterController.class
 com\tjetc\service\Impl\coreFunctionImpl\ChargingStationUseServiceImpl.class

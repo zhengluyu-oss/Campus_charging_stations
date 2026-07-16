@@ -39,4 +39,5 @@ public class MyTest1 {
         assert 26L == (Integer) claims.get("id"); // 注意：JWT中的数字通常被解析为Long类型
         assert "aa".equals(claims.getSubject());
     }
+
 }
