@@ -1,401 +1,74 @@
-<template>
-  <div class="welcome-container">
-    <!-- 主内容区域 -->
-    <div class="content-wrapper">
-      <!-- 标题区域 -->
-      <div class="title-section">
-        <h1 class="title">
-          <span class="title-text">校园充电站系统</span>
-          <span class="title-subtext">Campus Charging Station</span>
-        </h1>
-
-        <p class="subtitle">智能充电 · 绿色出行 · 便捷生活</p>
-      </div>
-
-      <!-- 登录选项卡片 -->
-      <div class="login-cards">
-        <div class="card user-card" @mouseenter="hoverCard = 'user'" @mouseleave="hoverCard = ''">
-          <div class="card-content">
-            <div class="card-icon">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M3 21V19C3 17.9391 3.42143 16.9217 4.17157 16.1716C4.92172 15.4214 5.93913 15 7 15H17C18.0609 15 19.0783 15.4214 19.8284 16.1716C20.5786 16.9217 21 17.9391 21 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h3 class="card-title">用户登录</h3>
-            <p class="card-desc">校园充电站用户专属入口，轻松预约充电桩，享受便捷充电服务</p>
-            <div class="card-highlights">
-              <p>• 实时查看充电桩状态</p>
-              <p>• 智能推荐最优充电点</p>
-              <p>• 个性化账单管理</p>
-            </div>
-            <router-link to="/user-login" class="card-button">
-              <span>立即登录</span>
-            </router-link>
-          </div>
-        </div>
-
-        <div class="card register-card" @mouseenter="hoverCard = 'register'" @mouseleave="hoverCard = ''">
-          <div class="card-content">
-            <div class="card-icon">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h3 class="card-title">用户注册</h3>
-            <p class="card-desc">创建新账号，开启智能充电之旅，享受绿色出行的便利</p>
-            <div class="card-highlights">
-              <p>• 快速注册，即时生效</p>
-              <p>• 完善个人信息</p>
-              <p>• 享受专属优惠</p>
-            </div>
-            <router-link to="/user-register" class="card-button">
-              <span>立即注册</span>
-            </router-link>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 特性展示 -->
-      <div class="features-section">
-        <div class="feature-item" v-for="(feature, index) in features" :key="index">
-          <div class="feature-icon">{{ feature.icon }}</div>
-          <h4 class="feature-title">{{ feature.title }}</h4>
-          <p class="feature-desc">{{ feature.desc }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref } from 'vue';
-
-// 卡片悬停状态
-const hoverCard = ref('');
-
-// 特性数据
+import { useRouter } from 'vue-router'
+import { ArrowRight, Calendar, CircleCheck, Clock, Lightning, Location, TrendCharts } from '@element-plus/icons-vue'
+const router = useRouter()
 const features = [
-  {
-    icon: '⚡',
-    title: '快速充电',
-    desc: '高效充电技术，节省您的宝贵时间'
-  },
-  {
-    icon: '🔒',
-    title: '安全可靠',
-    desc: '多重安全保障，让充电更安心'
-  },
-  {
-    icon: '🌍',
-    title: '绿色环保',
-    desc: '清洁能源，为环保贡献力量'
-  },
-  {
-    icon: '📱',
-    title: '智能管理',
-    desc: '手机APP远程控制，随时掌握充电状态'
-  }
-];
+  { icon: Location, title: '查看站点', desc: '按校区位置和实时状态快速筛选' },
+  { icon: Calendar, title: '提前预约', desc: '规划充电时间，减少现场等待' },
+  { icon: TrendCharts, title: '记录清晰', desc: '充电时长与费用记录随时可查' },
+]
 </script>
 
+<template>
+  <main class="landing">
+    <nav class="landing-nav">
+      <div class="landing-brand"><span><Lightning /></span><strong>校园充电</strong></div>
+      <div class="nav-actions"><el-button text @click="router.push('/user-login')">登录</el-button><el-button type="primary" @click="router.push('/user-register')">创建账户</el-button></div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><CircleCheck /> 校园绿色出行服务</div>
+        <h1>让每一次充电<br><em>简单、安心、可掌控</em></h1>
+        <p>统一查看校园充电桩状态，快速开始充电或提前预约。少一些等待，多一点从容。</p>
+        <div class="hero-actions">
+          <el-button type="primary" size="large" @click="router.push('/user-login')">开始使用 <el-icon><ArrowRight /></el-icon></el-button>
+          <el-button size="large" @click="router.push('/user-register')">注册校园账户</el-button>
+        </div>
+        <div class="trust-row"><span><CircleCheck /> 状态实时更新</span><span><CircleCheck /> 账户安全保护</span><span><CircleCheck /> 充电记录可追溯</span></div>
+      </div>
+
+      <div class="hero-preview" aria-label="系统功能预览">
+        <div class="preview-top"><span>站点概览</span><span class="live"><i /> 实时</span></div>
+        <div class="availability"><div><small>当前可用</small><strong>12</strong><span>个充电桩</span></div><span class="bolt"><Lightning /></span></div>
+        <div class="mini-stations">
+          <article><span class="status available" /><div><strong>图书馆充电区</strong><small><Location /> 北院 · 7kW</small></div><b>可用</b></article>
+          <article><span class="status busy" /><div><strong>综合楼充电区</strong><small><Location /> 南院 · 14kW</small></div><b class="busy-text">使用中</b></article>
+          <article><span class="status available" /><div><strong>学生公寓充电区</strong><small><Location /> 东院 · 7kW</small></div><b>可用</b></article>
+        </div>
+        <button type="button" @click="router.push('/user-login')">查看全部站点 <ArrowRight /></button>
+      </div>
+    </section>
+
+    <section class="feature-strip">
+      <article v-for="feature in features" :key="feature.title"><span><component :is="feature.icon" /></span><div><h2>{{ feature.title }}</h2><p>{{ feature.desc }}</p></div></article>
+      <div class="service-time"><Clock /><div><small>每日服务时间</small><strong>07:00—23:00</strong></div></div>
+    </section>
+  </main>
+</template>
+
 <style scoped>
-.welcome-container {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
-  margin: 0;
-  padding: 0;
-  /* 移除导致比例失调的transform: scale(0.9) */
-}
-
-
-.content-wrapper {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  padding: 20px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 50px; /* 减少间距以改善比例 */
-  margin: 0;
-  box-sizing: border-box;
-}
-
-.title-section {
-  animation: fadeInUp 1s ease-out;
-}
-
-.title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.title-text {
-  font-size: clamp(2.5rem, 8vw, 4rem); /* 使用clamp实现响应式字体大小 */
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 2px;
-  margin-bottom: 10px; /* 减少底部边距，缩小与副标题的间距 */
-}
-
-.title-subtext {
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 300;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-top: 10px;
-}
-
-.subtitle {
-  font-size: clamp(1rem, 3vw, 1.5rem); /* 响应式字体大小 */
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 20px; /* 减少间距 */
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  animation: fadeInUp 1s ease-out 0.3s both;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 登录卡片 */
-.login-cards {
-  display: flex;
-  gap: clamp(60px, 8vw, 80px); /* 增加响应式间距，使两个框分开更多 */
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 800px; /* 限制最大宽度 */
-  animation: fadeInUp 1s ease-out 0.6s both;
-  margin-top: -40px; /* 向上移动登录框 */
-}
-
-.card {
-  position: relative;
-  width: clamp(260px, 32vw, 350px); /* 缩小响应式卡片宽度 */
-  height: clamp(320px, 40vw, 380px); /* 缩小响应式卡片高度 */
-  perspective: 1000px;
-  flex: 1;
-  min-width: 260px; /* 调整最小宽度 */
-}
-
-.card-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: clamp(20px, 2.5vw, 30px) clamp(15px, 2.5vw, 25px); /* 调整响应式内边距 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-
-.user-card .card-content:hover {
-  background: rgba(52, 152, 219, 0.2);
-  transform: translateY(-8px);
-}
-
-.register-card .card-content:hover {
-  background: rgba(46, 204, 113, 0.2);
-  transform: translateY(-8px);
-}
-
-.card-icon {
-  width: clamp(60px, 10vw, 80px); /* 响应式图标大小 */
-  height: clamp(60px, 10vw, 80px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(24px, 5vw, 36px); /* 响应式图标字体 */
-  margin-bottom: clamp(15px, 3vw, 20px); /* 响应式间距 */
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.user-card .card-icon {
-  color: #3498db;
-}
-
-.register-card .card-icon {
-  color: #2ecc71;
-}
-
-.card:hover .card-icon {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.card-title {
-  font-size: clamp(1.3rem, 3vw, 1.8rem); /* 响应式字体大小 */
-  font-weight: 600;
-  margin: clamp(8px, 2vw, 10px) 0; /* 响应式间距 */
-  color: white;
-}
-
-.card-desc {
-  font-size: clamp(0.8rem, 2vw, 1rem); /* 响应式字体大小 */
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: clamp(15px, 3vw, 20px); /* 响应式间距 */
-  line-height: 1.6;
-}
-
-.card-highlights {
-  text-align: left;
-  margin-bottom: 15px;
-  padding: 0 10px;
-  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.5;
-}
-
-.card-highlights p {
-  margin: 5px 0;
-  display: flex;
-  align-items: center;
-}
-
-.card-button {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(10px, 2vw, 15px) clamp(25px, 4vw, 40px); /* 响应式内边距 */
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: clamp(0.9rem, 2vw, 1rem); /* 响应式字体大小 */
-}
-
-.card-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* 特性展示 */
-.features-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 30vw, 300px), 1fr)); /* 响应式最小宽度 */
-  gap: clamp(20px, 3vw, 30px); /* 响应式间距 */
-  width: 100%;
-  padding: 0 clamp(15px, 3vw, 20px); /* 响应式内边距 */
-  animation: fadeInUp 1s ease-out 0.9s both;
-}
-
-.feature-item {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: clamp(20px, 4vw, 30px) clamp(15px, 3vw, 20px); /* 响应式内边距 */
-  text-align: center;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.feature-item:hover {
-  transform: translateY(-10px);
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.feature-icon {
-  font-size: clamp(2rem, 5vw, 3rem); /* 响应式图标大小 */
-  margin-bottom: clamp(10px, 2vw, 15px); /* 响应式间距 */
-}
-
-.feature-title {
-  font-size: clamp(1.1rem, 3vw, 1.3rem); /* 响应式字体大小 */
-  font-weight: 600;
-  margin: clamp(8px, 2vw, 10px) 0; /* 响应式间距 */
-  color: white;
-}
-
-.feature-desc {
-  font-size: clamp(0.8rem, 2vw, 0.9rem); /* 响应式字体大小 */
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-  margin-top: clamp(5px, 1vw, 10px); /* 响应式上边距 */
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .title-text {
-    font-size: 2.5rem;
-  }
-
-  .subtitle {
-    font-size: 1.2rem;
-  }
-
-  .login-cards {
-    flex-direction: column;
-    align-items: center;
-    gap: 30px; /* 在小屏幕上使用固定间距 */
-  }
-
-  .card {
-    width: 100%;
-    max-width: 350px;
-  }
-
-  .features-section {
-    grid-template-columns: 1fr;
-    padding: 0 15px;
-  }
-
-  .content-wrapper {
-    gap: 40px; /* 小屏幕上的间距 */
-    padding: 15px;
-  }
-}
-
-/* 针对超大屏幕的优化 */
-@media (min-width: 1400px) {
-  .content-wrapper {
-    padding: 20px 40px;
-  }
-
-  .login-cards {
-    max-width: 900px;
-  }
-}
+.landing { min-height: 100vh; overflow: hidden; background: #f8faf8; }
+.landing-nav { width: min(1220px, calc(100% - 48px)); height: 82px; margin: auto; display: flex; align-items: center; justify-content: space-between; }
+.landing-brand { display: flex; align-items: center; gap: 11px; font-size: 18px; }
+.landing-brand span { width: 38px; height: 38px; display: grid; place-items: center; color: #fff; background: var(--brand); border-radius: 12px; }
+.nav-actions { display: flex; gap: 8px; }
+.hero { width: min(1220px, calc(100% - 48px)); min-height: 650px; margin: auto; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 80px; padding: 64px 0 90px; }
+.eyebrow { width: fit-content; display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: var(--brand-dark); background: var(--brand-soft); border-radius: 999px; font-size: 13px; font-weight: 700; }
+.eyebrow :deep(svg) { width: 16px; }
+h1 { margin: 26px 0 24px; font-size: clamp(44px, 6.2vw, 76px); line-height: 1.06; letter-spacing: -.065em; font-weight: 780; }
+h1 em { color: var(--brand); font-style: normal; }
+.hero-copy > p { max-width: 600px; margin: 0; color: var(--text-secondary); font-size: 18px; line-height: 1.8; }
+.hero-actions { display: flex; gap: 12px; margin-top: 36px; }
+.hero-actions .el-button { min-height: 50px; padding-inline: 24px; }
+.trust-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 36px; color: var(--text-secondary); font-size: 13px; }
+.trust-row span { display: flex; align-items: center; gap: 6px; }.trust-row :deep(svg) { width: 15px; color: var(--brand); }
+.hero-preview { position: relative; padding: 26px; background: #fff; border: 1px solid var(--border-color); border-radius: 28px; box-shadow: 0 30px 80px rgba(25,68,43,.14); }
+.hero-preview::before { content: ''; position: absolute; z-index: -1; width: 380px; height: 380px; right: -150px; top: -120px; background: #dff1e6; border-radius: 50%; filter: blur(3px); }
+.preview-top { display: flex; justify-content: space-between; font-weight: 700; }.live { display: flex; align-items: center; gap: 6px; color: var(--success); font-size: 12px; }.live i { width: 7px; height: 7px; background: currentColor; border-radius: 50%; }
+.availability { margin: 22px 0; padding: 24px; display: flex; align-items: center; justify-content: space-between; color: #fff; background: #183c29; border-radius: 20px; }.availability small,.availability strong,.availability div span { display: block; }.availability small { color: #b8d1c0; }.availability strong { margin: 4px 0 0; font-size: 48px; line-height: 1; }.availability div span { margin-top: -15px; margin-left: 62px; color: #b8d1c0; font-size: 12px; }.bolt { width: 62px; height: 62px; display: grid; place-items: center; color: #173e29; background: #b9e36e; border-radius: 18px; }.bolt :deep(svg) { width: 32px; }
+.mini-stations { display: grid; gap: 4px; }.mini-stations article { display: grid; grid-template-columns: 12px 1fr auto; align-items: center; gap: 12px; padding: 15px 10px; border-bottom: 1px solid #edf1ee; }.status { width: 9px; height: 9px; border-radius: 50%; }.status.available { background: var(--success); box-shadow: 0 0 0 4px #e4f4ea; }.status.busy { background: var(--warning); box-shadow: 0 0 0 4px #f9eedc; }.mini-stations strong,.mini-stations small { display: block; }.mini-stations strong { font-size: 14px; }.mini-stations small { margin-top: 5px; display: flex; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; }.mini-stations small :deep(svg) { width: 12px; }.mini-stations b { color: var(--success); font-size: 12px; }.mini-stations .busy-text { color: var(--warning); }.hero-preview > button { width: 100%; margin-top: 18px; padding: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--brand-dark); background: var(--brand-soft); border: 0; border-radius: 11px; font-weight: 700; cursor: pointer; }.hero-preview > button :deep(svg) { width: 15px; }
+.feature-strip { width: min(1220px, calc(100% - 48px)); margin: 0 auto 48px; padding: 24px 0; display: grid; grid-template-columns: repeat(3, 1fr) 1.1fr; gap: 20px; border-top: 1px solid var(--border-color); }.feature-strip article,.service-time { display: flex; align-items: center; gap: 13px; padding: 10px 18px; }.feature-strip article > span { width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center; color: var(--brand); background: var(--brand-soft); border-radius: 12px; }.feature-strip article > span :deep(svg) { width: 21px; }.feature-strip h2,.feature-strip p { margin: 0; }.feature-strip h2 { font-size: 14px; }.feature-strip p { margin-top: 5px; color: var(--text-muted); font-size: 11px; line-height: 1.4; }.service-time { justify-content: center; border-left: 1px solid var(--border-color); }.service-time > :deep(svg) { width: 23px; color: var(--brand); }.service-time small,.service-time strong { display: block; }.service-time small { color: var(--text-muted); font-size: 11px; }.service-time strong { margin-top: 4px; font-size: 14px; }
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:50px;padding-top:40px}.hero-copy{text-align:center}.hero-copy>p{margin-inline:auto}.eyebrow,.hero-actions{margin-inline:auto}.hero-actions,.trust-row{justify-content:center}.hero-preview{max-width:600px;margin:auto}.feature-strip{grid-template-columns:1fr 1fr}.service-time{border-left:0}}
+@media(max-width:600px){.landing-nav,.hero,.feature-strip{width:calc(100% - 28px)}.landing-nav{height:70px}.nav-actions .el-button:first-child{display:none}.hero{padding:38px 0 64px}.hero-actions{flex-direction:column}.trust-row{align-items:flex-start;flex-direction:column}.hero-preview{padding:16px;border-radius:20px}.feature-strip{grid-template-columns:1fr}.service-time{justify-content:flex-start}.availability{padding:20px}}
 </style>

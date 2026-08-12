@@ -11,6 +11,7 @@ import {createPinia} from 'pinia'
 import persistedstate from 'pinia-plugin-persistedstate'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import './styles/design-system.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 //调用createApp函数生成vue对象（这个vue对象就是viewmodel，把数据model和现实view进行最大限制的分离）

@@ -5,21 +5,6 @@ import {resolve} from 'path'
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [vue()],
-    // 生产环境自动移除 console/debugger
-    esbuild: {
-        drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    },
-    build: {
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    'vendor-element-plus': ['element-plus', '@element-plus/icons-vue'],
-                    'vendor-axios': ['axios'],
-                    'vendor-vue': ['vue', 'vue-router', 'pinia'],
-                },
-            },
-        },
-    },
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),

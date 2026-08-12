@@ -1,0 +1,122 @@
+:root {
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  color: #17221b;
+  background: #f5f7f5;
+  font-synthesis: none;
+  --brand: #167a45;
+  --brand-dark: #0e5630;
+  --brand-soft: #e9f5ee;
+  --surface: #ffffff;
+  --surface-muted: #f5f7f5;
+  --surface-strong: #edf1ed;
+  --text-primary: #17221b;
+  --text-secondary: #607068;
+  --text-muted: #89958e;
+  --border-color: #e1e7e2;
+  --border-hover: #b8cec0;
+  --success: #16834d;
+  --warning: #d48312;
+  --danger: #c74242;
+  --info: #557067;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 1px 2px rgba(20, 45, 30, .04), 0 6px 20px rgba(20, 45, 30, .05);
+  --shadow-md: 0 16px 40px rgba(20, 45, 30, .09);
+  --content-width: 1180px;
+  --el-color-primary: #167a45;
+  --el-color-primary-light-3: #4e9b70;
+  --el-color-primary-light-5: #78b391;
+  --el-color-primary-light-7: #afd2bd;
+  --el-color-primary-light-8: #d0e6d8;
+  --el-color-primary-light-9: #e9f5ee;
+  --el-color-primary-dark-2: #0e6235;
+  --el-border-radius-base: 10px;
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: #f5f7f5; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #f5f7f5; color: var(--text-primary); }
+button, input, textarea, select { font: inherit; }
+a { color: inherit; text-decoration: none; }
+#app { min-height: 100vh; }
+
+::selection { color: #fff; background: var(--brand); }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd4cd; border: 2px solid transparent; border-radius: 99px; background-clip: padding-box; }
+
+.page-shell,
+.dashboard-main,
+.stations-main,
+.options-main,
+.history-main,
+.profile-main,
+.news-main,
+.detail-main,
+.booking-main {
+  width: min(var(--content-width), calc(100% - 40px));
+  margin-inline: auto;
+}
+
+.page-header {
+  width: min(var(--content-width), calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 24px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--text-primary) !important;
+}
+.page-header h1 { margin: 0 0 10px; color: var(--text-primary) !important; font-size: clamp(28px, 4vw, 40px); line-height: 1.15; letter-spacing: -.04em; }
+.page-header .el-breadcrumb__inner { color: var(--text-muted) !important; font-weight: 500 !important; }
+
+.el-card {
+  color: var(--text-primary) !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+.el-card__header { border-bottom-color: var(--border-color) !important; }
+.el-button { min-height: 40px; padding-inline: 18px; border-radius: 10px; font-weight: 650; }
+.el-button--primary { box-shadow: 0 6px 16px rgba(22, 122, 69, .16); }
+.el-input__wrapper, .el-select__wrapper, .el-textarea__inner {
+  min-height: 44px;
+  background: #fff !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+.el-input__wrapper.is-focus, .el-select__wrapper.is-focused { box-shadow: 0 0 0 1px var(--brand) inset, 0 0 0 3px rgba(22,122,69,.1) !important; }
+.el-table { --el-table-border-color: var(--border-color); --el-table-header-bg-color: #f7f9f7; --el-table-row-hover-bg-color: #f3f8f5; color: var(--text-primary); }
+.el-dialog { border-radius: 20px !important; overflow: hidden; }
+.el-tag { border-radius: 999px; font-weight: 650; }
+
+/* Remove legacy decorative layers and normalize every retained business page. */
+.page-background, .background-grid, .gradient-overlay, .particles-container, .ambient-particles { display: none !important; }
+.charging-stations-page, .charging-detail-page, .booking-page, .booking-detail-page,
+.history-page, .profile-page, .news-page, .charging-service-options, .user-dashboard {
+  min-height: calc(100vh - 72px);
+  color: var(--text-primary) !important;
+  background: var(--surface-muted) !important;
+}
+.filter-card, .list-card, .history-card, .profile-card, .charging-card, .booking-form-card, .station-card, .option-card, .news-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: #fff !important;
+  color: var(--text-primary) !important;
+  text-shadow: none !important;
+}
+.card-header, .station-info, .detail-item, .stat-label, .news-summary, .station-address { color: var(--text-secondary) !important; }
+.card-header h2, .card-header h3, .station-info h3, .news-title { color: var(--text-primary) !important; }
+
+@media (max-width: 760px) {
+  .page-shell, .dashboard-main, .stations-main, .options-main, .history-main, .profile-main, .news-main, .detail-main, .booking-main,
+  .page-header { width: min(100% - 24px, var(--content-width)); }
+  .page-header { padding-top: 28px !important; }
+  .el-dialog { width: calc(100% - 24px) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

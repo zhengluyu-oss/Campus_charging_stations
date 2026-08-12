@@ -55,6 +55,10 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true }
     },
     {
+        path: "/station/:id",
+        redirect: to => `/booking/detail/${to.params.id}`
+    },
+    {
         path: "/booking",
         name: "booking",
         component: () => import('../views/user/BookingView.vue'),

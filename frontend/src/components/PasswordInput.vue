@@ -58,7 +58,7 @@ const handleInput = (value: string) => {
     const newChar = newValue[newCharIndex];
     
     // 临时显示新字符
-    visibleChars.value[newCharIndex] = newChar;
+    visibleChars.value[newCharIndex] = newChar ?? '';
     
     // 清除之前的定时器
     if (timers.value[newCharIndex]) {

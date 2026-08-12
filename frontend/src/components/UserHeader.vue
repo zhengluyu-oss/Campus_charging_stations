@@ -1,139 +1,87 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ArrowDown, Clock, Grid, Lightning, Document, User } from '@element-plus/icons-vue'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const state = reactive({
-  hasBack: true, // 是否展示返回icon
-})
+const route = useRoute()
+const store = useUserStore()
 
-// 返回方法
-const back = () => {
-  router.back()
-}
+const username = computed(() => store.user?.username || '校园用户')
+const initial = computed(() => username.value.slice(0, 1).toUpperCase())
+const isActive = (path: string) => route.path === path || (path !== '/user-dashboard' && route.path.startsWith(path))
 
-// 导航到用户仪表盘
-const goToDashboard = () => {
-  router.push('/user-dashboard')
+const navItems = [
+  { label: '首页', path: '/user-dashboard', icon: Grid },
+  { label: '充电服务', path: '/user/charging-service', icon: Lightning },
+  { label: '充电记录', path: '/history', icon: Clock },
+  { label: '校园资讯', path: '/user/news?mode=view', icon: Document },
+]
+
+const logout = () => {
+  store.$patch({ token: '', user: undefined })
+  router.replace('/user-login')
 }
 </script>
 
 <template>
-  <div class="header">
-    <div class="left">
-      <el-icon class="back" v-if="state.hasBack" @click="back">
-        <Back/>
-      </el-icon>
-      <span class="logo" @click="goToDashboard">
-        <span class="logo-icon">⚡</span>
-        校园充电站
-      </span>
-    </div>
-    <div class="right">
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          <span class="user-avatar">👤</span>
-          用户中心
-          <el-icon class="el-icon--right">
-            <arrow-down />
-          </el-icon>
-        </span>
+  <header class="app-header">
+    <div class="header-inner">
+      <button class="brand" type="button" @click="router.push('/user-dashboard')" aria-label="返回首页">
+        <span class="brand-mark"><Lightning /></span>
+        <span><strong>校园充电</strong><small>Campus Charge</small></span>
+      </button>
+
+      <nav class="desktop-nav" aria-label="主导航">
+        <button
+          v-for="item in navItems"
+          :key="item.path"
+          type="button"
+          :class="{ active: isActive(item.path.split('?')[0] || item.path) }"
+          @click="router.push(item.path)"
+        >
+          <el-icon><component :is="item.icon" /></el-icon>{{ item.label }}
+        </button>
+      </nav>
+
+      <el-dropdown trigger="click">
+        <button class="account-button" type="button">
+          <span class="avatar">{{ initial }}</span>
+          <span class="account-name">{{ username }}</span>
+          <el-icon><ArrowDown /></el-icon>
+        </button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="router.push('/profile')">个人资料</el-dropdown-item>
-            <el-dropdown-item @click="router.push('/history')">历史记录</el-dropdown-item>
-            <el-dropdown-item @click="router.push('/user-login')" divided>退出登录</el-dropdown-item>
+            <el-dropdown-item :icon="User" @click="router.push('/profile')">个人资料</el-dropdown-item>
+            <el-dropdown-item :icon="Clock" @click="router.push('/history')">充电记录</el-dropdown-item>
+            <el-dropdown-item divided @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
     </div>
-  </div>
+  </header>
 </template>
 
 <style scoped>
-.header {
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 24px;
-  background: rgba(15, 32, 39, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header .left {
-  display: flex;
-  align-items: center;
-}
-
-.header .left .logo {
-  font-size: 18px;
-  font-weight: 600;
-  margin-left: 12px;
-  cursor: pointer;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-}
-
-.header .left .logo:hover {
-  transform: scale(1.02);
-}
-
-.logo-icon {
-  font-size: 24px;
-}
-
-.header .left .back {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 6px;
-  border-radius: 8px;
-  margin-right: 12px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.header .left .back:hover {
-  background: rgba(0, 201, 255, 0.2);
-  border-color: var(--brand-primary);
-  color: var(--brand-primary);
-}
-
-.header .right {
-  display: flex;
-  align-items: center;
-}
-
-.el-dropdown-link {
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  padding: 8px 16px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.el-dropdown-link:hover {
-  color: var(--brand-primary);
-  background: rgba(0, 201, 255, 0.1);
-  border-color: rgba(0, 201, 255, 0.3);
-}
-
-.user-avatar {
-  margin-right: 8px;
-  font-size: 16px;
-}
+.app-header { position: sticky; top: 0; z-index: 100; height: 72px; background: rgba(255,255,255,.94); border-bottom: 1px solid var(--border-color); backdrop-filter: blur(14px); }
+.header-inner { width: min(var(--content-width), calc(100% - 40px)); height: 100%; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+.brand, .account-button, .desktop-nav button { border: 0; background: none; cursor: pointer; color: inherit; }
+.brand { display: flex; align-items: center; gap: 11px; padding: 0; text-align: left; }
+.brand-mark { width: 38px; height: 38px; display: grid; place-items: center; color: white; background: var(--brand); border-radius: 12px; }
+.brand-mark :deep(svg) { width: 21px; }
+.brand strong, .brand small { display: block; }
+.brand strong { font-size: 16px; letter-spacing: -.02em; }
+.brand small { margin-top: 1px; color: var(--text-muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.desktop-nav { height: 100%; display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.desktop-nav button { position: relative; height: 100%; display: flex; align-items: center; gap: 7px; padding: 0 15px; color: var(--text-secondary); font-weight: 600; }
+.desktop-nav button::after { content: ''; position: absolute; left: 15px; right: 15px; bottom: 0; height: 3px; background: var(--brand); border-radius: 3px 3px 0 0; transform: scaleX(0); transition: transform .2s; }
+.desktop-nav button:hover, .desktop-nav button.active { color: var(--brand-dark); }
+.desktop-nav button.active::after { transform: scaleX(1); }
+.account-button { display: flex; align-items: center; gap: 9px; padding: 7px 10px 7px 7px; border-radius: 12px; }
+.account-button:hover { background: var(--surface-muted); }
+.avatar { width: 32px; height: 32px; display: grid; place-items: center; color: #fff; background: #20392a; border-radius: 10px; font-size: 13px; font-weight: 750; }
+.account-name { max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
+@media (max-width: 820px) { .header-inner { width: calc(100% - 24px); } .desktop-nav { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 120; height: 60px; justify-content: space-around; gap: 0; padding: 5px; background: rgba(255,255,255,.96); border: 1px solid var(--border-color); border-radius: 18px; box-shadow: var(--shadow-md); backdrop-filter: blur(16px); } .desktop-nav button { height: 50px; flex: 1; flex-direction: column; justify-content: center; gap: 3px; padding: 0; font-size: 10px; border-radius: 12px; } .desktop-nav button::after { display: none; } .desktop-nav button.active { background: var(--brand-soft); } }
+@media (max-width: 520px) { .account-name { display: none; } .brand small { display: none; } }
 </style>
