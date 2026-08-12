@@ -13,12 +13,7 @@ const updateShowNav = () => {
   const hiddenRoutes = ['/welcome', '/user-login', '/user-register']
   const isHiddenPath = hiddenRoutes.includes(route.path)
 
-  if (route.path === '/user/news') {
-    const mode = route.query.mode
-    showNav.value = mode === 'publish'
-  } else {
-    showNav.value = !isHiddenPath
-  }
+  showNav.value = !isHiddenPath
 }
 
 watch(

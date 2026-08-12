@@ -1,6 +1,7 @@
 //request就是axios对象（经过自己处理的）
 import request from "../utils/request";
 import type {User} from "../viewmodel/UserModel.ts"
+import {useUserStore} from "../stores/user"
 
 //登录函数，返回值是Promise对象
 export function userLogin(username: string, password: string) {
@@ -57,9 +58,11 @@ export function updateOwnMessage(userId: number, username: string, password: str
 
 // 获取当前用户信息
 export function getCurrentUser() {
+    const username = useUserStore().user?.username
     return request({
-        url: '/user-api/user/current',
-        method: 'get'
+        url: '/user/selectOwnMessage',
+        method: 'post',
+        data: { username }
     })
 }
 
@@ -98,4 +101,3 @@ export function userRegister(username: string, password: string, email: string, 
         }
     })
 }
-

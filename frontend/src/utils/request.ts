@@ -14,7 +14,7 @@ export interface JsonResult<T> {
 }
 
 //跳转登录url路径
-const loginUrlPath = "user-login"
+const loginUrlPath = "/user-login"
 
 //获取令牌token函数
 const getAuthToken = (): string => {
@@ -50,6 +50,11 @@ const service = axios.create({
     // `transformRequest` 允许在向服务器发送前，修改请求数据
     // 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
     transformRequest: (data, headers) => {
+        if (data instanceof FormData) {
+            // Preserve native FormData so the browser can generate the multipart boundary.
+            delete headers['Content-Type']
+            return data
+        }
         if (headers['Content-Type']) {
             if ((headers['Content-Type'] as string).indexOf('multipart/form-data') > -1) { // 上传文件处理
                 headers['Content-Type'] = ""
@@ -118,7 +123,7 @@ service.interceptors.response.use(
         if (res.state > 0) {
             ElMessage.error(res.message || "系统出错");
             return Promise.reject(res.message)
-        } else if (res.state === -1 && !isLoginRequest) { // 未登录或者登录过期，但排除登录请求本身
+        } else if (res.state === -1 && !isLoginRequest && /未登录|登录.*过期|token/i.test(res.message || '')) { // 仅认证失败触发重新登录
             // to re-login
             ElMessageBox.alert('登录已经过期，请重新登录', '登录过期', {
                 confirmButtonText: '重新登录'
@@ -138,6 +143,9 @@ service.interceptors.response.use(
                 userStore.$patch({ token: '', user: undefined });
             });
             return Promise.reject('登录已经过期，请重新登录')
+        } else if (res.state === -1) {
+            ElMessage.error(res.message || '操作失败')
+            return Promise.reject(res.message || '操作失败')
         } else {
             //成功 正确数据
             return res

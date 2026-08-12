@@ -17,16 +17,21 @@ export function publishNews(data: NewsPublishData) {
     });
 }
 
-export function getNewsList() {
-    return request({
-        url: '/news/list',
-        method: 'get'
-    });
+export async function getNewsList() {
+    const categories = ['event', 'policy', 'lost'];
+    const responses: any[] = await Promise.all(categories.map(newsCategory => request({
+        url: '/news/listByCategory',
+        method: 'post',
+        data: { newsCategory }
+    })));
+    return { data: responses.flatMap(response => Array.isArray(response?.data) ? response.data : []) };
 }
 
 export function getNewsByCategory(categoryId: number) {
+    const categories: Record<number, string> = { 1: 'event', 2: 'policy', 3: 'lost' };
     return request({
-        url: `/news/category/${categoryId}`,
-        method: 'get'
+        url: '/news/listByCategory',
+        method: 'post',
+        data: { newsCategory: categories[categoryId] || 'policy' }
     });
 }
