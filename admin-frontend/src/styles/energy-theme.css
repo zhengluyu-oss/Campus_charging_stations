@@ -1,0 +1,69 @@
+@import './tokens.css';
+@import './motion.css';
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  color-scheme: dark;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 70% 45% at 80% 0%, rgba(0, 229, 255, 0.1), transparent 50%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: auto, 56px 56px, 56px 56px;
+}
+
+.glass-panel,
+.glass-card,
+.page-card {
+  color: var(--text-primary);
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    var(--shadow-sm);
+}
+
+.el-table {
+  --el-table-border-color: var(--border-color);
+  --el-table-header-bg-color: rgba(18, 30, 46, 0.95);
+  --el-table-tr-bg-color: transparent;
+  --el-table-row-hover-bg-color: rgba(0, 229, 255, 0.06);
+  --el-table-bg-color: transparent;
+  --el-table-text-color: var(--text-primary);
+  --el-table-header-text-color: var(--text-secondary);
+  color: var(--text-primary) !important;
+  background: transparent !important;
+}
+
+.el-table th.el-table__cell,
+.el-table td.el-table__cell {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.el-button--primary {
+  --el-button-text-color: #041018;
+  --el-button-hover-text-color: #041018;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import type { FormInstance, FormRules, UploadFile } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { Edit, Lock, Message, Phone, User } from '@element-plus/icons-vue'
 import { getCurrentUser, updateOwnMessage } from '@/api/user'
 import { uploadAvatar } from '@/api/upload'
 import { useUserStore } from '@/stores/user'
+import { useEffects, type EffectsLevel } from '@/effects/effectsContext'
 
 const store = useUserStore()
+const effects = useEffects()
+const effectsLevel = computed(() => effects.level.value)
 const formRef = ref<FormInstance>()
 const editing = ref(false)
 const saving = ref(false)
 const avatarFile = ref<File>()
 const password = ref('')
 const form = reactive<any>({ id: 0, username: '', email: '', telephone: '', avatarPath: '' })
+
+const onEffectsChange = (val: string | number | boolean | undefined) => {
+  if (val === 'off' || val === 'low' || val === 'full') effects.setLevel(val as EffectsLevel)
+}
 
 const rules: FormRules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -134,6 +141,19 @@ const save = async () => {
         </div>
       </section>
 
+      <section class="effects-panel glass-panel">
+        <div>
+          <span class="account-label">VISUAL EFFECTS</span>
+          <h2>视觉特效等级</h2>
+          <p>答辩/服务器演示时可切换 Full / Low / Off，弱设备会自动降级。</p>
+        </div>
+        <el-radio-group :model-value="effectsLevel" @change="onEffectsChange">
+          <el-radio-button value="full">Full</el-radio-button>
+          <el-radio-button value="low">Low</el-radio-button>
+          <el-radio-button value="off">Off</el-radio-button>
+        </el-radio-group>
+      </section>
+
       <section class="settings-layout">
         <aside>
           <span class="section-number">01</span>
@@ -217,7 +237,25 @@ const save = async () => {
 .profile-page {
   min-height: calc(100vh - 72px);
   padding-bottom: 80px;
-  background: var(--surface-muted);
+  background: transparent;
+}
+
+.effects-panel {
+  margin: 8px 0 28px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.effects-panel h2 {
+  margin: 8px 0 6px;
+  font-size: 20px;
+}
+.effects-panel p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
 }
 
 .profile-header {

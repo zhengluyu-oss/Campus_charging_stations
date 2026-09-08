@@ -1,0 +1,72 @@
+:root {
+  /* Campus Energy — Immersive */
+  --bg-void: #070b12;
+  --bg-panel: rgba(12, 22, 36, 0.72);
+  --bg-panel-solid: #0c1624;
+  --bg-elevated: #121e2e;
+
+  --brand-cyan: #00e5ff;
+  --brand-volt: #7cffb2;
+  --brand-amber: #ffc857;
+  --brand-fault: #ff5c7a;
+  --brand-accent: #0077b6;
+
+  --brand: var(--brand-cyan);
+  --brand-primary: var(--brand-cyan);
+  --brand-secondary: var(--brand-volt);
+  --brand-dark: #00a8bd;
+  --brand-soft: rgba(0, 229, 255, 0.12);
+  --accent: var(--brand-amber);
+
+  --text-primary: #e8f1f8;
+  --text-secondary: #8aa0b5;
+  --text-muted: #5a7280;
+  --text-dim: var(--text-secondary);
+  --ink: var(--text-primary);
+
+  --surface: var(--bg-panel-solid);
+  --surface-muted: var(--bg-void);
+  --surface-strong: var(--bg-elevated);
+
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(0, 229, 255, 0.35);
+  --grid-line: rgba(0, 229, 255, 0.06);
+
+  --success: var(--brand-volt);
+  --warning: var(--brand-amber);
+  --danger: var(--brand-fault);
+  --info: var(--text-secondary);
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 24px 70px rgba(0, 0, 0, 0.45);
+  --glow-cyan: 0 0 24px rgba(0, 229, 255, 0.25);
+
+  --font-display: "Orbitron", "Chakra Petch", "Segoe UI", sans-serif;
+  --font-body: "DM Sans", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+
+  --bg-primary: var(--bg-void);
+  --bg-secondary: var(--bg-elevated);
+  --bg-card: var(--bg-panel);
+
+  --el-color-primary: #00e5ff;
+  --el-color-primary-light-3: #33eaff;
+  --el-color-primary-light-5: #66efff;
+  --el-color-primary-light-7: #99f4ff;
+  --el-color-primary-light-8: #b3f7ff;
+  --el-color-primary-light-9: #e6fcff;
+  --el-color-primary-dark-2: #00b8cc;
+  --el-color-success: #7cffb2;
+  --el-color-warning: #ffc857;
+  --el-color-danger: #ff5c7a;
+  --el-bg-color: var(--bg-void);
+  --el-bg-color-overlay: var(--bg-elevated);
+  --el-text-color-primary: var(--text-primary);
+  --el-text-color-regular: var(--text-secondary);
+  --el-border-color: var(--border-color);
+  --el-border-radius-base: 8px;
+  --el-fill-color-blank: var(--bg-elevated);
+}

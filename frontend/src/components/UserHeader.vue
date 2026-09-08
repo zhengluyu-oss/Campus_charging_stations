@@ -76,9 +76,9 @@ const logout = () => {
   z-index: 100;
   height: 68px;
   color: #fff;
-  background: rgba(12, 14, 20, .96);
-  border-bottom: 1px solid rgba(255, 255, 255, .1);
-  backdrop-filter: blur(18px);
+  background: rgba(7, 11, 18, .92);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(14px);
 }
 .header-inner {
   width: min(var(--content-width), calc(100% - 48px));
@@ -90,24 +90,24 @@ const logout = () => {
 }
 .brand, .account-button, .desktop-nav button, .charge-now { border: 0; font: inherit; cursor: pointer; }
 .brand { display: flex; align-items: center; gap: 10px; padding: 0; color: #fff; background: none; text-align: left; }
-.brand-mark { position: relative; width: 28px; height: 28px; display: block; background: var(--brand); border-radius: 6px; overflow: hidden; }
-.brand-mark i { position: absolute; width: 5px; height: 20px; top: 4px; background: #fff; transform: skew(-18deg); }
+.brand-mark { position: relative; width: 28px; height: 28px; display: block; background: var(--brand-cyan); border-radius: 6px; overflow: hidden; }
+.brand-mark i { position: absolute; width: 5px; height: 20px; top: 4px; background: #041018; transform: skew(-18deg); }
 .brand-mark i:first-child { left: 8px; }.brand-mark i:last-child { right: 7px; opacity: .42; }
-.brand-copy { display: grid; gap: 0; font-size: 10px; line-height: 1.05; letter-spacing: .14em; }
-.brand-copy strong:last-child { color: #9398ff; }
+.brand-copy { display: grid; gap: 0; font-size: 10px; line-height: 1.05; letter-spacing: .14em; font-family: var(--font-display); }
+.brand-copy strong:last-child { color: var(--brand-cyan); }
 .desktop-nav { height: 100%; display: flex; align-items: center; gap: 2px; margin-left: 34px; }
-.desktop-nav button { position: relative; height: 100%; display: flex; align-items: center; gap: 7px; padding: 0 15px; color: #a8abb5; background: none; font-size: 13px; font-weight: 600; }
+.desktop-nav button { position: relative; height: 100%; display: flex; align-items: center; gap: 7px; padding: 0 15px; color: var(--text-secondary); background: none; font-size: 13px; font-weight: 600; }
 .desktop-nav button :deep(svg) { width: 15px; }
-.desktop-nav button::after { content: ''; position: absolute; left: 15px; right: 15px; bottom: 0; height: 2px; background: #818bff; transform: scaleX(0); transition: transform .18s ease; }
+.desktop-nav button::after { content: ''; position: absolute; left: 15px; right: 15px; bottom: 0; height: 2px; background: var(--brand-cyan); transform: scaleX(0); transition: transform .18s ease; }
 .desktop-nav button:hover, .desktop-nav button.active { color: #fff; }
 .desktop-nav button.active::after { transform: scaleX(1); }
 .header-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.charge-now { height: 38px; display: flex; align-items: center; gap: 7px; padding: 0 14px; color: #101116; background: #fff; border-radius: 7px; font-size: 12px; font-weight: 760; }
+.charge-now { height: 38px; display: flex; align-items: center; gap: 7px; padding: 0 14px; color: #041018; background: linear-gradient(135deg, var(--brand-cyan), var(--brand-volt)); border-radius: 7px; font-size: 12px; font-weight: 760; }
 .charge-now :deep(svg) { width: 15px; }
-.charge-now:hover { background: #e9eaff; }
+.charge-now:hover { filter: brightness(1.06); }
 .account-button { display: flex; align-items: center; gap: 8px; padding: 4px 7px 4px 4px; color: #e9e9ee; background: transparent; border-radius: 8px; }
 .account-button:hover { background: rgba(255,255,255,.08); }
-.avatar { width: 30px; height: 30px; display: grid; place-items: center; color: #fff; background: #5867f6; border-radius: 7px; font-size: 12px; font-weight: 800; }
+.avatar { width: 30px; height: 30px; display: grid; place-items: center; color: #041018; background: linear-gradient(135deg, var(--brand-cyan), var(--brand-volt)); border-radius: 7px; font-size: 12px; font-weight: 800; }
 .account-name { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 650; }
 
 @media (max-width: 900px) {

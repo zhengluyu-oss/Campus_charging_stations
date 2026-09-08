@@ -1,13 +1,17 @@
 <template>
-  <AmbientParticles />
+  <AmbientCanvas />
   <div v-if="route.path === '/login'" class="login-wrapper">
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <transition :name="motionName" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
   <div v-else class="admin-layout">
     <aside class="sidebar" :class="{ collapsed: adminStore.sidebarCollapsed }">
       <div class="sidebar-header">
         <el-icon :size="24" color="var(--brand-primary)"><Lightning /></el-icon>
-        <span v-show="!adminStore.sidebarCollapsed" class="sidebar-title">Charging Admin</span>
+        <span v-show="!adminStore.sidebarCollapsed" class="sidebar-title font-display">ENERGY CMD</span>
       </div>
       <el-menu
         :default-active="route.path"
@@ -15,7 +19,7 @@
         router
         background-color="transparent"
         text-color="rgba(255, 255, 255, 0.65)"
-        active-text-color="#00c9ff"
+        active-text-color="#00e5ff"
         class="sidebar-menu"
       >
         <el-menu-item index="/dashboard">
@@ -73,43 +77,41 @@
         </div>
       </header>
       <main class="main-content">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition :name="motionName" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </main>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, defineAsyncComponent, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
-import AmbientParticles from '@/components/AmbientParticles.vue'
+import { provideEffects } from '@/effects/effectsContext'
+import { ambientPresetForAdminPath } from '@/effects/routePresets'
+
+const AmbientCanvas = defineAsyncComponent(() => import('@/effects/AmbientCanvas.vue'))
 
 const route = useRoute()
 const adminStore = useAdminStore()
+const effects = provideEffects()
+
+const motionName = computed(() => (effects.motionEnabled.value ? 'route-fade' : ''))
+
+watch(
+  () => route.path,
+  (path) => effects.setAmbientPreset(ambientPresetForAdminPath(path)),
+  { immediate: true }
+)
 
 onMounted(() => {
   document.documentElement.classList.add('dark')
 })
-
 </script>
-
-
-<style>
-:root {
-  --bg-primary: #1a2a3a;
-  --bg-secondary: #1e3040;
-  --bg-card: rgba(255, 255, 255, 0.06);
-  --brand-primary: #00b4d8;
-  --brand-secondary: #52b788;
-  --brand-accent: #0077b6;
-  --text-primary: #e8edf2;
-  --text-secondary: #8fa3b0;
-  --text-muted: #5a7280;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(0, 180, 216, 0.3);
-}
-</style>
 
 <style scoped>
 .login-wrapper {
@@ -125,16 +127,16 @@ onMounted(() => {
   height: 100vh;
   position: relative;
   z-index: 1;
-  background: var(--bg-primary);
+  background: transparent;
 }
 
 .sidebar {
   width: 250px;
   height: 100vh;
-  background: rgba(15, 25, 35, 0.85);
+  background: rgba(7, 11, 18, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--border-color);
   transition: width 0.3s ease;
   overflow: hidden;
   flex-shrink: 0;
@@ -152,17 +154,17 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-color);
   padding: 0 16px;
   flex-shrink: 0;
 }
 
 .sidebar-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: #ffffff;
   white-space: nowrap;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.12em;
 }
 
 .sidebar-menu {
@@ -184,10 +186,10 @@ onMounted(() => {
 
 .main-header {
   height: 60px;
-  background: rgba(15, 25, 35, 0.7);
+  background: rgba(7, 11, 18, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -203,18 +205,18 @@ onMounted(() => {
 
 .collapse-btn {
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--text-secondary);
   transition: color 0.2s;
 }
 
 .collapse-btn:hover {
-  color: #00c9ff;
+  color: var(--brand-cyan);
 }
 
 .page-title {
   font-size: 16px;
   font-weight: 500;
-  color: #e0e0e0;
+  color: var(--text-primary);
 }
 
 .header-right {
@@ -225,11 +227,11 @@ onMounted(() => {
 
 .admin-name {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--text-secondary);
 }
 
 .admin-avatar {
-  background: linear-gradient(135deg, #00c9ff, #92fe9d);
+  background: linear-gradient(135deg, var(--brand-cyan), var(--brand-volt));
   cursor: pointer;
 }
 
@@ -237,7 +239,7 @@ onMounted(() => {
   flex: 1;
   overflow: auto;
   padding: 24px;
-  color: #e0e0e0;
+  color: var(--text-primary);
 }
 
 .main-content::-webkit-scrollbar {
@@ -251,9 +253,5 @@ onMounted(() => {
 .main-content::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
 }
 </style>

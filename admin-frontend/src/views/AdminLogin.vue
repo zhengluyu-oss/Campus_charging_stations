@@ -1,17 +1,12 @@
 <template>
-  <div class="login-page">
-    <!-- Animated particle background -->
-    <div class="particles">
-      <div v-for="n in 60" :key="n" class="particle" :style="particleStyle(n)"></div>
-    </div>
-
+  <div class="login-page page-enter-active">
     <!-- Login card -->
     <div class="login-card">
       <div class="login-header">
         <div class="logo-icon">
-          <el-icon :size="36" color="#00c9ff"><Lightning /></el-icon>
+          <el-icon :size="36" color="var(--brand-cyan)"><Lightning /></el-icon>
         </div>
-        <h2 class="login-title">Charging Station Admin</h2>
+        <h2 class="login-title font-display">Energy Command</h2>
         <p class="login-subtitle">Sign in to manage your campus charging network</p>
       </div>
 
@@ -90,23 +85,6 @@ const rules: FormRules = {
   password: [{ required: true, message: 'Please enter password', trigger: 'blur' }],
 }
 
-function particleStyle(_n: number) {
-  const size = Math.random() * 4 + 1
-  const x = Math.random() * 100
-  const y = Math.random() * 100
-  const delay = Math.random() * 20
-  const duration = Math.random() * 20 + 15
-  const opacity = Math.random() * 0.4 + 0.1
-  return {
-    width: `${size}px`,
-    height: `${size}px`,
-    left: `${x}%`,
-    top: `${y}%`,
-    animationDelay: `${delay}s`,
-    animationDuration: `${duration}s`,
-    opacity: opacity,
-  }
-}
 
 async function handleLogin() {
   const valid = await formRef.value?.validate().catch(() => false)
@@ -153,14 +131,6 @@ async function handleLogin() {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-}
-
-.particle {
-  position: absolute;
-  background: linear-gradient(45deg, #00c9ff, #92fe9d);
-  border-radius: 50%;
-  animation: floatParticle linear infinite;
-  filter: blur(1px);
 }
 
 @keyframes floatParticle {

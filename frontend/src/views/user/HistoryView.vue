@@ -4,6 +4,8 @@ import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { getChargingHistory } from '@/api/chargingStationsApi'
 import { useUserStore } from '@/stores/user'
+import StatusRing from '@/viz/charts/StatusRing.vue'
+import CountUp from '@/motion/CountUp.vue'
 
 const store = useUserStore()
 const loading = ref(false)
@@ -48,6 +50,15 @@ const averageMinutes = computed(() =>
   rows.value.length ? Math.round(totalMinutes.value / rows.value.length) : 0,
 )
 
+const feeRing = computed(() => {
+  const energy = Math.max(totalAmount.value * 0.72, 0)
+  const service = Math.max(totalAmount.value - energy, 0)
+  return [
+    { name: '电费', value: Number(energy.toFixed(2)) || 1 },
+    { name: '服务费', value: Number(service.toFixed(2)) || 0 },
+  ]
+})
+
 onMounted(async () => {
   if (!store.user?.id) return
   loading.value = true
@@ -63,7 +74,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="history-page">
+  <div class="history-page page-enter-active">
     <header class="page-header history-header">
       <div>
         <p class="eyebrow">CHARGING LEDGER</p>
@@ -81,23 +92,27 @@ onMounted(async () => {
         <dl>
           <div>
             <dt>充电次数</dt>
-            <dd>{{ rows.length }}<small>次</small></dd>
+            <dd><CountUp :value="rows.length" /><small>次</small></dd>
           </div>
           <div>
             <dt>累计时长</dt>
-            <dd>{{ (totalMinutes / 60).toFixed(1) }}<small>小时</small></dd>
+            <dd><CountUp :value="Number((totalMinutes / 60).toFixed(1))" :decimals="1" /><small>小时</small></dd>
           </div>
           <div>
             <dt>平均时长</dt>
-            <dd>{{ averageMinutes }}<small>分钟</small></dd>
+            <dd><CountUp :value="averageMinutes" /><small>分钟</small></dd>
           </div>
           <div>
             <dt>累计费用</dt>
-            <dd><small>¥</small>{{ totalAmount.toFixed(2) }}</dd>
+            <dd><small>¥</small><CountUp :value="Number(totalAmount.toFixed(2))" :decimals="2" /></dd>
           </div>
         </dl>
       </section>
 
+      <section class="fee-viz glass-panel">
+        <h3 class="font-display">费用构成（示意）</h3>
+        <StatusRing :data="feeRing" height="200px" />
+      </section>
       <section class="activity">
         <header class="activity-head">
           <div>
@@ -156,7 +171,18 @@ onMounted(async () => {
 .history-page {
   min-height: calc(100vh - 72px);
   padding-bottom: 72px;
-  background: var(--surface-muted);
+  background: transparent;
+}
+
+.fee-viz {
+  margin: 18px 0 28px;
+  padding: 16px 18px 8px;
+}
+.fee-viz h3 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
 }
 
 .history-header {

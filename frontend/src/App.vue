@@ -1,38 +1,45 @@
 <script setup lang="ts">
-import {useRouter, useRoute} from 'vue-router'
-import { ref, watch } from 'vue'
+import { computed, defineAsyncComponent, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import Header from './components/UserHeader.vue'
 import Footer from './components/Footer.vue'
+import { provideEffects } from './effects/effectsContext'
+import { ambientPresetForUserPath } from './effects/routePresets'
 
-const router = useRouter()
+const AmbientCanvas = defineAsyncComponent(() => import('./effects/AmbientCanvas.vue'))
+
 const route = useRoute()
+const effects = provideEffects()
 
-const showNav = ref(true)
-
-const updateShowNav = () => {
+const showNav = computed(() => {
   const hiddenRoutes = ['/welcome', '/user-login', '/user-register']
-  const isHiddenPath = hiddenRoutes.includes(route.path)
+  return !hiddenRoutes.includes(route.path)
+})
 
-  showNav.value = !isHiddenPath
-}
+const motionName = computed(() => (effects.motionEnabled.value ? 'route-fade' : ''))
 
 watch(
-  () => route.fullPath,
-  () => {
-    updateShowNav()
+  () => route.path,
+  (path) => {
+    effects.setAmbientPreset(ambientPresetForUserPath(path))
   },
   { immediate: true }
 )
 </script>
 
 <template>
+  <AmbientCanvas />
   <div class="layout">
     <el-container class="container">
-      <Header v-if="showNav"/>
+      <Header v-if="showNav" />
       <div class="main" :class="{ 'no-nav': !showNav }">
-        <router-view/>
+        <router-view v-slot="{ Component }">
+          <transition :name="motionName" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </div>
-      <Footer v-if="showNav"/>
+      <Footer v-if="showNav" />
     </el-container>
   </div>
 </template>
@@ -43,8 +50,10 @@ html, body, #app { min-height: 100%; }
 <style scoped>
 .layout {
   min-height: 100vh;
-  background: var(--surface-muted);
+  background: transparent;
   color: var(--text-primary);
+  position: relative;
+  z-index: 1;
 }
 
 .container {

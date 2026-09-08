@@ -1,9 +1,6 @@
 <template>
   <div class="payment-page">
-    <!-- Decorative particles -->
-    <div class="particles">
-      <div v-for="n in 15" :key="n" class="particle" :style="particleStyle(n)"></div>
-    </div>
+</div>
 
     <!-- Summary stats -->
     <el-row :gutter="20" class="stats-row">
@@ -147,17 +144,6 @@ const paidCount = computed(() => payments.value.filter(p => p.paymentStatus === 
 const pendingCount = computed(() => payments.value.filter(p => p.paymentStatus === 'pending').length)
 const totalAmount = computed(() => payments.value.reduce((sum, p) => sum + (p.amount || 0), 0))
 
-function particleStyle(_n: number) {
-  return {
-    width: `${Math.random() * 3 + 1}px`,
-    height: `${Math.random() * 3 + 1}px`,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    animationDelay: `${Math.random() * 15}s`,
-    animationDuration: `${Math.random() * 15 + 10}s`,
-    opacity: Math.random() * 0.2 + 0.05,
-  }
-}
 
 function formatTime(time: string | null | undefined): string {
   if (!time) return '--'
@@ -263,14 +249,6 @@ onMounted(() => {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-}
-
-.particle {
-  position: absolute;
-  background: linear-gradient(45deg, #00c9ff, #92fe9d);
-  border-radius: 50%;
-  animation: dashFloat linear infinite;
-  filter: blur(1px);
 }
 
 @keyframes dashFloat {

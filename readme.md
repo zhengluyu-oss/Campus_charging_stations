@@ -97,8 +97,11 @@ npm run dev    # 端口 9999
 
 ## 视觉风格
 
-所有前端项目共享统一的暗色玻璃拟态（Glassmorphism）主题：
-- 背景渐变：`#0f2027 → #203a43 → #2c5364`
-- 卡片：`rgba(255,255,255,0.08)` + `backdrop-filter: blur(12px)`
-- 强调色：`#00c9ff → #92fe9d`（青色到薄荷绿渐变）
-- Three.js 粒子背景 + MediaPipe 手部追踪交互
+前端采用 **Campus Energy** 深空能源主题（方案 C 沉浸式）：
+- 主背景：`#070B12` + 淡技术网格
+- 品牌电光青：`#00E5FF` / 能量绿：`#7CFFB2`
+- Orbitron（展示/数字）+ DM Sans（正文）
+- App 根级氛围粒子（可按 Full / Low / Off 切换，弱设备自动降级）
+- 管理端指挥舱仪表盘 + ECharts 能源主题图表
+
+特效开关：用户端「账户设置」、管理端「Settings」。

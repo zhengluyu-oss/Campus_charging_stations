@@ -6,7 +6,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/campus_charging_station?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:123456}
+
   #数据库自动初始化
   sql:
     init:
@@ -35,6 +36,8 @@ spring:
       max-file-size: 10MB
       #配置请求数据最大值
       max-request-size: 50MB
+  profiles:
+    active: dev
 springdoc:
   # 1. 原始 JSON 数据路径 (Apifox 同步时用的就是这个)
   api-docs:

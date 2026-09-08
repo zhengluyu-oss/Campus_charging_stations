@@ -14,7 +14,7 @@ const meta=(s:any)=>normalize(s)===0?{label:'空闲',class:'available'}:normaliz
 </script>
 
 <template>
-  <div class="station-page">
+  <div class="station-page page-enter-active">
     <header class="page-header hero-header">
       <div class="header-copy">
         <p>CHARGING NETWORK / LIVE</p>
@@ -22,9 +22,9 @@ const meta=(s:any)=>normalize(s)===0?{label:'空闲',class:'available'}:normaliz
         <span>全校站点状态实时同步，选择空闲设备即可预约。</span>
       </div>
       <div class="network-count" aria-label="站点实时统计">
-        <div><strong>{{ available }}</strong><span>AVAILABLE</span></div>
+        <div><strong class="font-metric">{{ available }}</strong><span>AVAILABLE</span></div>
         <i />
-        <div><strong>{{ stations.length }}</strong><span>TOTAL</span></div>
+        <div><strong class="font-metric">{{ stations.length }}</strong><span>TOTAL</span></div>
       </div>
     </header>
     <main class="stations-main">
